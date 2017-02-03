@@ -1,0 +1,10 @@
+<%= render 'partials/forms/edit_show_new',
+view_name: "Menus",
+
+#field_name, header_name 
+table_fields: [['description', 'Descrição'],
+ ['order_menu', 'Ordem'],
+ ['action', 'Action'],
+ ['controller', 'Controlador', 'controller_list']], #table used by the index view
+mode:'update'
+%>

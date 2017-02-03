@@ -1,0 +1,62 @@
+<%= render "partials/top" %>
+	<div class = "row">
+		<div class = "large-12 columns">
+			<h3 class="subheader">Editar Apontamento</h3>
+		</div>
+	</div>
+<%= form_for @model_instance, :url =>{:action => 'update', :id =>@model_instance} do |f| %><div class = "row">
+			<div class = "large-2 columns">
+				<label> Código
+					<%= f.text_field 'id', :disabled => true %>
+				</label>
+			</div>		
+			<div class = "large-4 columns">
+				<label> Tipo Apontamento
+					<%= text_field_tag 'ins_record_type', @model_instance.ins_record_type.description, :disabled=>true %>
+				</label>
+			</div>
+			<div class = "large-6 columns">
+				<label> 
+					<% if @model_instance.sys_user.type_person == "e" %>
+						Funcionário
+						<%= text_field_tag 'ins_record_type', @model_instance.sys_user.hr_employee.name, :disabled=>true %>
+					<% else %>
+						Inspetor
+				 		<%= text_field_tag 'ins_record_type', @model_instance.sys_user.ins_inspector.name, :disabled=>true %>
+					<% end %>
+				</label>
+			</div>
+		</div>
+		<div class = "row">
+			<div class = "large-2 columns">
+				<label> Horário Apontamento
+					<%= f.text_field 'rec_datetime', :disabled => true %>
+				</label>
+			</div>	
+			<div class = "large-2 columns">
+				<label> Incluir
+					<%= f.text_field 'ind_include', :disabled => true %>
+				</label>
+			</div>	
+			<div class = "large-12 columns">
+				<label> Observações Internas
+					<%= f.text_field 'internal_notes'%>
+				</label>
+			</div>		
+			<div class = "large-12 columns">
+				<label> Observações Externas
+					<%= f.text_field 'external_notes'%>
+				</label>
+			</div>		
+		</div>
+			
+			
+	<div class = 'row'>
+		<ul class = "button-group radius">
+				<li><%= link_to "Voltar", {:action => 'index'}, :class => 'secondary button' %></li>
+				<li><%= f.submit 'Salvar', :class => 'button success' %></li>
+				<li><%= link_to 'Cancelar', {:action => 'index'}, :class => 'button alert' %></li>
+		</ul>
+	</div>	
+<% end %>
+<%= render 'partials/bottom'%>

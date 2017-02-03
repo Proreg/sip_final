@@ -1,0 +1,6 @@
+<%= render 'partials/forms/index',
+view_name: "Telefones de "+@employee.name,
+
+#field_name, header_name 
+table_fields: [['area_code', 'Área'],['phone_number', 'Número de telefone'], [:sys_telephone_type,'Tipo Telefone', 'fk']] #table used by the index view
+%>

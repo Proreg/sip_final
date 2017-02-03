@@ -1,0 +1,77 @@
+
+<%= render 'partials/top' %> <!-- Renders the top of the pages-->
+
+	<div class="row">
+        <div class="large-12 columns">
+            <h3 class="subheader">Cadastro Funcionário (Consertar layout)</h3>  
+        </div>
+    </div>
+
+
+
+<%= form_for @employee, :url =>{:action => "create", :id =>@employee} do |f| %>
+	<div class="row">
+                <div class="large-4 columns ">
+                    <label>Nome:
+                        <%= f.text_field 'name', :required => true %>
+                    </label>
+                </div>
+                <div class="large-1 columns ">
+                    <label>Ramal:
+                        <%= f.text_field 'extension_line', :required => true %>
+                    </label>
+                </div>
+                <div class="large-2 columns ">
+                    <label>CPF:
+                        <%= f.text_field 'cpf', :required => true, :class=>'cpf' %>
+                    </label>
+                </div>  
+                <div class="large-2 columns ">
+                    <label>RG:
+                        <%= f.text_field 'rg', :required => true %>
+                    </label>
+                </div>  
+			   <div class="large-3 columns ">
+	                 <label>Data de\Nascimento:
+	                 	<%= f.text_field :date_of_birth, :id => 'date_of_birth', :required => true %><!--mask date defined in welcome.coffee file   -->
+
+	                 </label>
+	            </div>  
+	        
+	            <div class="large-2 columns ">
+                   <label>Contratação:
+                        <%= f.text_field :hiring_date, :id => 'hiring_date', :required => true %>
+                    </label>
+                </div>
+                
+                <div class="large-2 columns ">
+                   <label>Ativo:
+                       	<%= check_box_tag(:active) %>
+                   </label>
+                </div>
+                <div class="large-2 columns ">
+                    <label>Setor:
+                       	<%= f.select(:hr_sector) do %>
+						  <% @sectors.each do |c| -%>
+						    <%= content_tag(:option, c.description, value: c.id) %>
+						  <% end %>
+						<% end %>
+	                  </label>
+	            </div>    
+	  </div>
+	  <div class="row">
+          <ul class="button-group radius">
+
+	          <li><%= f.submit "Salvar", :class => 'button success' %></li>
+	          <li><%= link_to 'Cancelar', {:action => 'list' }, :class => 'button alert'  %></li>
+	      </ul>     
+      </div> 
+	                      
+
+   <% end %>
+
+
+
+
+
+<%= render 'partials/bottom' %> <!-- Renders the top of the pages-->

@@ -1,0 +1,17 @@
+<% if @employees.blank? %>
+<p>NAO HÁ FUNCIONARIOS SALVOS</p>
+<% else %>
+<p>LISTA FUNCIONARIOS</p>
+
+<ul id = "employees">
+   <% @employees.each do |c| %>
+    <li><%= c.name-%>  - <!-- Chama a action visualizar passando o parametro ID-->
+    <%= link_to 'VISUALIZAR', {:action => 'show', :id => c.id} -%>  -
+    <%= link_to 'EDITAR', {:action => 'edit', :id => c.id} -%> - 
+    <%= link_to 'APAGAR', {:action => 'destroy', :id => c.id} -%></li>
+   <% end %>
+</ul>
+<% end %>
+<%= link_to 'NOVO', {:action => 'new'} -%>
+
+

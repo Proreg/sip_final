@@ -1,0 +1,2 @@
+module HrSchoolingLevelsHelper
+end

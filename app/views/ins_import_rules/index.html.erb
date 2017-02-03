@@ -1,0 +1,9 @@
+<%= render 'partials/forms/index',
+view_name: "Regras de Importação",
+
+#field_name, header_name 
+table_fields: [[:ins_insurance_company, 'Cia', 'fk'], 
+[:ins_rules_field, 'Campos de Regra', 'fk'], 
+['limit_begin', 'Limite Início'],
+['limit_end', 'Limite Final']] #table used by the index view
+%>

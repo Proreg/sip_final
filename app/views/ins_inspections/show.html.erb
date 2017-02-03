@@ -1,0 +1,256 @@
+<%= render "partials/top" %>
+	<div class = "row">
+		<div class = "large-12 columns">
+			<h3 class="subheader">Inspeção</h3>
+		</div>
+	</div>
+<%= form_for @model_instance, :url =>{:action => 'show', :id =>@model_instance} do |f| %>
+	<div class = "row">
+		<div class = "large-2 columns">
+			<label> Código
+				<%= f.text_field 'id', :disabled => true %>
+			</label>
+		</div>		
+		<div class = "large-5 columns">
+			<label> Nome
+				<%= f.text_field 'name', :disabled => true %>
+			</label>
+		</div>
+		<div class = "large-2 columns">
+			<label> Chave
+				<%= f.text_field 'key', :disabled => true %>
+			</label>
+		</div>
+		<div class = "large-2 columns">
+			<label> Data Pedido
+				<%= f.text_field 'request_date', :value=> @model_instance.request_date&.to_date, :disabled => true %>
+			</label>
+		</div>	
+		<div class = "large-1 columns">
+			<label> Situação
+				<%= f.text_field 'situation', :disabled => true %>
+			</label>
+		</div>
+	</div>
+	<div class='row'>	
+		<div class = "large-6 columns">
+			<label> Endereço
+				<%= f.text_field 'address', :disabled => true %>
+			</label>
+		</div>
+		<div class = "large-4 columns">
+			<label> Bairro
+				<%= f.text_field 'neighborhood', :disabled => true %>
+			</label>
+		</div>
+		<div class = "large-2 columns">
+			<label> CEP
+				<%= f.text_field 'zip_code', :disabled => true %>
+			</label>
+		</div>
+	</div>
+	<div class='row'>	
+		<div class = "large-5 columns">
+			<label> Cidade 
+				<%= f.text_field 'sys_city', :value => @model_instance.sys_city.description + ' - ' + @model_instance.sys_city.sys_state.uf, :disabled => true %>
+			</label>
+		</div>	
+		<div class = "large-5 columns">
+			<label> Local do Risco 
+				  <% c = SysCity.find(@model_instance.risk_local_id) if @model_instance.risk_local_id
+					   city = c.try(:description).to_s + " - " + c.try(:sys_state).try(:uf).to_s %>
+				  <%= text_field_tag('sys_city',city, :disabled => true)%>
+			</label>
+		</div>
+		<div class = 'large-5 columns'>
+			<label> Complemento
+			
+			</label>	
+		</div>
+		<div class = "large-2 columns">
+				<label> Valor
+					<%= f.text_field 'inspection_value', :value => Money.new(@model_instance.inspection_value).format,  :disabled => true, :class => "money_value" %>
+				</label>
+		</div>
+	</div>
+	<div class="row">
+		<div class = "large-4 columns">
+			<label> Seguradora
+				<%= f.text_field 'ins_insurance_company', :value=> @model_instance.ins_insurance_company.try(:commercial_name), :disabled=>true  %> <!-- Variable being set inside the controller-->  
+			</label>
+		</div>
+		<div class = "large-3 columns">
+			<label> Solicitante
+				<%= f.text_field 'claimant', :disabled => true %>
+			</label>
+		</div>
+		<div class = "large-3 columns">
+			<label> Atividade
+				<%= f.text_field 'activity', :disabled => true %>
+			</label>
+		</div>
+		<div class = "large-2 columns">
+			<label> Area
+				<%= f.text_field 'area', :disabled => true %>
+			</label>
+		</div>
+	</div>
+	<div class = "row">
+		<div class = "large-6 columns">
+			<label> Inspetor
+				<%= f.text_field 'ins_inspector', :value=> @model_instance.ins_inspector.try(:name), :disabled => true %>
+			</label>
+		</div>
+		<div class = 'large-6 columns'>
+			<label> Sub-Inspetor
+				<%= #f.text_field 'ins_sub_inspector', :value=> @model_instance.ins_sub_inspector.try(:name), :disabled => true 
+				%>
+			</label>	
+		</div>	
+	</div>
+	<div class="row">
+		<div class = "large-2 columns">
+			<label> Data da Inspeção
+				<%= f.text_field 'inspection_date', :value => @model_instance.inspection_date&.to_date , :disabled => true %>
+			</label>
+		</div>
+		<div class = "large-2 columns">
+			<label> Data da Entrega
+				<%= f.text_field 'deliver_date', :disabled => true %>
+			</label>
+		</div>
+		<div class = "large-2 columns">
+			<label> Data Agendamento
+				<%= f.text_field 'scheduling_date',  :value => @model_instance.scheduling_date&.to_date ,:disabled => true %>
+			</label>
+		</div>
+		<div class = "large-2 columns">
+			<label> Data de Prazo
+				<%= f.text_field 'deadline', :disabled => true %>
+			</label>
+		</div>
+		<div class = "large-2 columns">
+			<label> Data de Orientação
+				<%= f.text_field 'orientation_date', :disabled => true %>
+			</label>
+		</div>
+		<div class = "large-2 columns">
+			<label> Inspeção Urgente
+				<%= f.text_field 'ind_urgent', :disabled => true %>
+			</label>
+		</div>
+		<div class = "large-12 columns">
+			<label> Observação
+				<%= f.text_area 'notes', :disabled => true %>
+			</label>
+		</div>
+	</div>
+	<div class="row">
+		<div class = "large-12 columns">
+			<label> Orientação
+				<%= f.text_area 'guider', :disabled => true %>
+			</label>
+		</div>	
+	</div>
+	<div class="row">
+		<div class = "large-12 columns">
+			<label> Recomendação
+				<%= f.text_area 'recomendation', :disabled => true%>
+			</label>
+		</div>	
+	</div>	
+	<div class='row'>
+	   	<div class='columns large-6'>    		
+   			<table>
+    			<thead>
+    				<tr>
+    					<th><center>Cobertura</center></th>
+    					<th><center>Observação</center></th>    					
+    				</tr>
+    			</thead>
+    			<tbody>   
+    				<% @coverages.each do |coverage| %>
+   						<tr>
+    						<%= fields_for 'coverages[]', coverage do |coverage_fields| %>
+   								<td>
+      								<center>
+      									<%= text_field_tag :ins_coverage_type, coverage.ins_coverage_type.description, :disabled => true %><!-- Because you only want to specify html_options, just pass in an empty Hash {} for options.-->
+									</center>
+      							</td>	
+       							<td>
+       								<center>
+       									<%= coverage_fields.text_field :ins_notes, :disabled => true %>
+       								</center>
+								</td>
+								<td>
+									<center>
+       									<%= #link_to "Excluir", {:controller=>params[:controller],:action => 'delete', :method => :delete, :id=> @coverage.id}, :confirm => "Are you sure?", :class => 'tiny button alert'
+       									%>
+       								</center>
+								</td>
+   							<% end -%>
+      					</tr>
+    				<% end %>
+    			</tbody>
+			</table>
+    	</div>
+    	<div class='columns large-6'>    		
+    		<table>
+    			<thead>
+    				<tr>
+    					<th><center>Tipo</center></th>
+    					<th><center>Número</center></th>    					
+    				</tr>
+    			</thead>
+    			<tbody>   
+    				<% @phones.each do |phone| %>
+   						<tr>
+    						<%= fields_for 'phones[]', phone do |phone_fields| %>
+   								<td>
+      								<center>
+      									<%= text_field_tag :ins_telephone_type, phone.sys_telephone_type.description, :disabled => true %><!-- Because you only want to specify html_options, just pass in an empty Hash {} for options.-->
+									</center>
+      							</td>	
+       							<td>
+       								<center>
+       									<%= phone_fields.text_field :phone_number, :disabled => true %>
+       								</center>
+								</td>
+   							<% end -%>
+      					</tr>
+    				<% end %>
+    			</tbody>
+			</table>
+    	</div>
+	</div>
+	<div class = 'row'>
+		<div class='columns large-12'>
+			<div class = "button-group radius">
+				<a><%= link_to 'Editar', {:action => 'edit'}, :class => 'small button success' %></a>
+				<a><%= link_to "Voltar", {:action => 'index'}, :class => 'small secondary button' %></a>
+				<a><%= link_to 'Itens Inspeção', {:action => 'edit', :controller => 'ins_inspection_items', :ins_inspection_id => params[:id]}, :class => 'small button' %></a>
+				<a><%= link_to 'Apontamentos', {:action => 'index', :controller => 'ins_inspection_records', :ins_inspection_id => params[:id]}, :class => 'small button' %></a>
+				<a><%= link_to 'Mapa', {:action => 'choose_inspector', :controller => 'ins_inspection_maps', :ins_inspection_id => params[:id]}, :class => 'small button' %></a>
+				<a><%= link_to 'Arquivos', {:action => 'index', :controller => 'ins_inspection_files', :ins_inspection_id => params[:id]}, :class => 'small button' %></a>
+				<a><%= link_to "Inspeção Simplificada", {action: "simplified_inspection",:ins_inspection_id => params[:id], format: "pdf"}, {target: "_blank", class: "small button"} %></a>
+				<a><%= link_to "Despesas Inspetor", {action: "inspector_items", controller: "financial_dashboard", :ins_inspection_id => params[:id]}, {class: "small button"} %></a>
+			</div>
+		</div>
+	</div>	
+	<br>
+	<div class = 'row'>
+		<div class='columns large-12'>
+			<div class = "button-group radius">
+				<a><%= link_to 'Cancelar Inspeção', {:action => 'cancel', :ins_inspection_id => params[:id]}, :class => 'small button secondary' %></a>
+				<a><%= link_to 'Inspeção Recebida', {:action => 'mark_as_received', :ins_inspection_id => params[:id]}, :class => 'small button secondary' %></a>
+				<a><%= link_to 'Análise', {:action => 'first_analysis', :ins_inspection_id => params[:id]}, :class => 'small button secondary' %></a>
+				<a><%= link_to 'Análise Final', {:action => 'final_analysis', :ins_inspection_id => params[:id]}, :class => 'small button secondary' %></a>
+				<a><%= link_to 'Inspeção Enviada', {:action => 'sent', :ins_inspection_id => params[:id]}, :class => 'small button secondary' %></a>
+				<a><%= link_to 'Baixa', {:action => 'ending', :ins_inspection_id => params[:id]}, :class => 'small button secondary' %></a>
+				<a><%= link_to 'Conferência Baixa', {:action => 'ending_review', :ins_inspection_id => params[:id]}, :class => 'small button secondary' %></a>
+				<a><%= link_to 'E', {:action => 'e', :ins_inspection_id => params[:id]}, :class => 'small button secondary' %></a>
+			</div>
+		</div>
+	</div>	
+<% end %>
+<%= render 'partials/bottom'%>

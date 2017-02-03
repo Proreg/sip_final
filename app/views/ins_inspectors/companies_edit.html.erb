@@ -1,0 +1,48 @@
+<%= render 'partials/top'%><!-- Renders the top of the pages-->
+	<div class="row">
+		<div class="large-12 columns">
+            <h3 class="subheader">Edição Seguradora - Inspetor: <%= InsInspector.find(params[:ins_inspector_id]).name %></h3>  
+        </div>
+	</div>
+    <br/>
+    <div class='row'>
+    	<div class='columns large-12'>    		
+    		<table>
+    			<thead>
+    				<tr>
+    					<th>Seguradora</th>
+    					<th>Ativo</th>
+    				</tr>
+    			</thead>
+    			<tbody>    	
+    				<%= form_tag(action: 'companies_change', method: :put)do %>
+    					<% @companies_inspector.each do |relationship| -%>
+    					
+							<tr>
+    							<%= fields_for 'company[]' , relationship do |relationship_fields| -%>
+      							
+      								<td>
+      									<%= InsInsuranceCompany.find(relationship.ins_insurance_company_id).commercial_name%>
+	  								</td>	
+        							<td>
+        								<center>
+        									<%= relationship_fields.check_box :active, {}, 't', 'f' %>
+        								</center>
+									</td>   
+      							<% end -%>
+    						<% end %>
+    					</tr>
+    			</tbody>
+			</table>
+    	</div>	
+	</div>
+	<div class='row'>
+		<div class="columns large-12">
+			<%= submit_tag("Editar", :class => 'button success') %>
+			<% end -%>
+		</div>
+	</div>
+            
+                
+	
+<%= render 'partials/bottom'%><!-- Renders the top of the pages-->

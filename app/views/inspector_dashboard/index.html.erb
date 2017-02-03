@@ -1,0 +1,188 @@
+<style>
+	
+  td a{
+   display: block;
+	background-color:none;
+}
+tr{
+	   padding: 0;
+}
+</style>
+<%= render "partials/top" %>
+	<div class = "row">
+		<div class = "large-12 columns">
+			<h3 class="subheader">Painel Inspetor <%= InsInspector.find(params[:ins_inspector_id]).name %></h3>
+		</div>
+	</div>
+	
+	<div class = "row">
+		<div class = "large-12 columns">
+			<ul class="tabs" data-tab>
+			  <li class="tab-title active"><a href="#panel1">Caixa de Entrada <%= "(#{@inbox.count })"%></a></li>
+			  <li class="tab-title"><a href="#panel2">Execução <%= "(#{@in_progress.count })"%></a></li>
+			  <li class="tab-title"><a href="#panel3">Laudo a Enviar <%= "(#{@to_send.count })"%></a></li>
+			  <li class="tab-title"><a href="#panel4">Despesas Inspetor</a></li>
+			</ul>
+			<div class="tabs-content">
+			  <div class="content active" id="panel1">
+			  	<table id="inbox" class="display" cellspacing="0" width="100%">
+			        <thead>
+			            <tr>
+			                <th>Número</th>
+			                <th>Nome</th>
+			                <th>Endereço</th>
+			                <th>Cidade</th>
+			            </tr>
+			        </thead>
+			        <tbody>
+			        	<% @inbox.each do |inspection| %>
+						    <tr >
+				                <td> <%= link_to inspection["ins_inspection_id"], controller: "inspector_dashboard", action: "inspection", ins_inspection_id: inspection["ins_inspection_id"], state: "inbox" %> </td>
+				                <td> <%= link_to inspection["name"], controller: "inspector_dashboard", action: "inspection", ins_inspection_id: inspection["ins_inspection_id"], state: "inbox" %> </td>
+				                <td> <%= link_to inspection["address"], controller: "inspector_dashboard", action: "inspection", ins_inspection_id: inspection["ins_inspection_id"], state: "inbox" %> </td>
+				                <td> <%= link_to SysCity.find(inspection["sys_city_id"]).description, controller: "inspector_dashboard", action: "inspection", ins_inspection_id: inspection["ins_inspection_id"], state: "inbox" %> </td>
+				            </tr>     
+					    <% end %>
+			        </tbody>
+			    </table>
+			  </div>
+			  <div class="content" id="panel2">
+			    <table id="execute" class="display" cellspacing="0" width="100%">
+			        <thead>
+			            <tr>
+			                <th>Número</th>
+			                <th>Nome</th>
+			                <th>Endereço</th>
+			                <th>Cidade</th>
+			            </tr>
+			        </thead>
+			        <tbody>
+			        	<% @in_progress.each do |inspection| %>
+						     <tr >
+				                <td> <%= link_to inspection["ins_inspection_id"], controller: "inspector_dashboard", action: "inspection", ins_inspection_id: inspection["ins_inspection_id"], state: "in_progress" %> </td>
+				                <td> <%= link_to inspection["name"], controller: "inspector_dashboard", action: "inspection", ins_inspection_id: inspection["ins_inspection_id"], state: "in_progress" %> </td>
+				                <td> <%= link_to inspection["address"], controller: "inspector_dashboard", action: "inspection", ins_inspection_id: inspection["ins_inspection_id"], state: "in_progress" %> </td>
+				                <td> <%= link_to SysCity.find(inspection["sys_city_id"]).description, controller: "inspector_dashboard", action: "inspection", ins_inspection_id: inspection["ins_inspection_id"], state: "in_progress" %> </td>
+				            </tr>     
+					    <% end %>
+			        </tbody>
+			    </table>
+			  </div>
+			  <div class="content" id="panel3">
+			    <table id="to_send" class="display" cellspacing="0" width="100%">
+			        <thead>
+			            <tr>
+			                <th>Número</th>
+			                <th>Nome</th>
+			                <th>Endereço</th>
+			                <th>Cidade</th>
+			            </tr>
+			        </thead>
+			        <tbody>
+			        	<% @to_send.each do |inspection| %>
+						    <tr >
+				                <td> <%= link_to inspection["ins_inspection_id"], controller: "inspector_dashboard", action: "inspection", ins_inspection_id: inspection["ins_inspection_id"], state: "to_send" %> </td>
+				                <td> <%= link_to inspection["name"], controller: "inspector_dashboard", action: "inspection", ins_inspection_id: inspection["ins_inspection_id"], state: "to_send" %> </td>
+				                <td> <%= link_to inspection["address"], controller: "inspector_dashboard", action: "inspection", ins_inspection_id: inspection["ins_inspection_id"], state: "to_send" %> </td>
+				                <td> <%= link_to SysCity.find(inspection["sys_city_id"]).description, controller: "inspector_dashboard", action: "inspection", ins_inspection_id: inspection["ins_inspection_id"], state: "to_send" %> </td>
+				            </tr>        
+					    <% end %>
+			        </tbody>
+			    </table>
+			  </div>
+			  
+			  <div class="content" id="panel4">
+			  	<div class="row">
+				<div class="panel callout secondary columns">
+					<% if @top %>
+					<div class='row'>			
+					<div class = "large-3 columns">
+						<label>Quantidade Inspeções:
+							<b><%= @top["inspection_amount"]? @top["inspection_amount"] : 0 %></b>
+						</label>
+					</div>
+					<div class = "large-3 columns">
+						<label>Total Honorario:
+							<b><%= @top["total_honorarium"]? Money.new(@top["total_honorarium"]).format : 0 %></b>
+						</label>
+					</div>
+					<div class = "large-3 columns end">	
+						<label>Valor Outras Despesas:
+							<b><%= @top["total_others"]? Money.new(@top["total_others"]).format : 0  %></b>
+						</label>
+					</div>
+				</div>
+				<div class='row'>	
+					<div class = "large-3 columns">	
+						<label>Quantidade KM:
+							<b><%=  @top["km_amount"]?  @top["km_amount"] : 0  %></b>
+						</label>
+					</div>
+					<div class = "large-3 columns">	
+						<label>Valor Total KM:
+							<b><%= @top["km_value"]? Money.new(@top["km_value"]).format : 0  %></b>
+						</label>
+					</div>
+					<div class = "large-3 columns end">
+						<label>Valor Total da Planilha:
+							<b><%= @top["total_value"]? Money.new(@top["total_value"]).format : 0 %></b>
+						</label>
+					</div>
+				</div>	
+				<% end %>
+			</div>
+			    <ul class="accordion" data-accordion>
+				  <li class="accordion-navigation">
+				  	<% @spendings.each do |spending| %>
+				  	    <a href="#panel<%= spending["id"] %>"><%= spending["id"].to_s + ' - ' + spending["name"].to_s + ' - ' + Money.new(spending["sum(item.total_value)"].to_i).format + ' - ' + spending['inspection_date'].to_date.to_s %> </a>
+					    <div id="panel<%=spending["id"] %>" class="content">
+						 <table class="display" cellspacing="0" width="100%"> 
+		    				<thead>
+		    					<tr>
+									<th>Descrição</th>
+									<th>Valor Unitário</th>
+									<th>Quantidade</th>
+									<th>Valor Total</th>
+									<th>Obs</th>
+									<th>Ação</th>
+									<th><%= link_to "Adicionar Item", {controller: "dashboard_ins_inspector_items", action: "new", ins_inspection_id: spending["id"]}, class: "button tiny info"%></th>
+								</tr>
+			    			</thead>
+							<% InsInspectorItem.where(ins_inspection_id: spending["id"]).each do |item| %>
+
+			    				<tbody class="input_fields_wrap_item"> 
+			    					<tr>
+			    						<td><%= item.ins_inspector_product.description  %></td>
+			    						<td><%= Money.new(item.unitary_value).format %></td>
+			    						<td><%= item.amount  %></td>
+			    						<td><%= Money.new(item.total_value).format %></td>
+			    						<td><%=item.ins_notes%></td>
+			    						<td><%= link_to "Editar Item", {controller: "dashboard_ins_inspector_items", action: "edit", ins_inspection_id: spending["id"], id: item.id}, class: 'button tiny info' %></td>
+			    						<td> </td>
+			    					</tr>
+			    				</tbody>
+							<% end %>
+						</table>
+				  	 </div>
+				    <% end %>
+				  </li>
+				</ul>
+			</div>
+			</div>
+		</div>
+	</div>
+<%= render 'partials/bottom'%>
+
+<script>
+	$(document).ready(function() {
+    $('#inbox').DataTable();
+    $('#execute').DataTable();
+    $('#to_send').DataTable();
+} );
+
+jQuery(document).ready(function($) {
+    $(".clickable-row").click(function() {
+        window.document.location = $(this).data("href");
+    });
+});
+</script>

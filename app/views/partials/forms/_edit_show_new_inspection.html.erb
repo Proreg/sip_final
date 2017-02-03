@@ -1,0 +1,175 @@
+<%= render "partials/top" %>
+	<div class = "row">
+		<div class = "large-12 columns">
+			<h3 class="subheader"><%= view_name -%></h3>
+		</div>
+	</div>
+<%= form_for @model_instance, :url =>{:multipart => true,:action => mode, :id =>@model_instance} do |f| %>
+		<div class = "row">
+			<div class = "large-2 columns">
+				<label> Código
+					<%= f.text_field 'id', :disabled => true %>
+				</label>
+			</div>		
+			<div class = "large-5 columns">
+				<label> Seguradora
+					<% case mode when 'show' %>
+							<%= text_field :ins_insurance_company, :commercial_name, :disabled=>true  %> <!-- Variable being set inside the controller-->  
+						<% when 'update' %>
+							  <%= f.select( :ins_insurance_company_id, options_for_select(["Selecionar"], InsInsuranceCompany.all.map{|s|[s.commercial_name, s.id]}, @model_instance.ins_insurance_company_id), {}, { :class => "ui fluid search dropdown" }) %><!-- Because you only want to specify html_options, just pass in an empty Hash {} for options. @model_instance.sys_city_id selects the ID for edit-->	
+						<%else%>
+ 						  <%= f.select( :ins_insurance_company_id, options_for_select(["Selecionar"]+InsInsuranceCompany.all.map{|s|[s.commercial_name, s.id]}), {}, { :class => "ui fluid search dropdown", :id => 'company'}) %><!-- Because you only want to specify html_options, just pass in an empty Hash {} for options.-->
+					<% end %>
+				</label>
+			</div>		
+			<div class = "large-5 columns" id="file_handler" style="display: none;">
+				<label> Importar arquivo
+					  <%= file_field_tag :import_file, :id=> 'import_file', :onchange => "this.form.action='novo/arquivo';this.form.submit();"%><!-- Because you only want to specify html_options, just pass in an empty Hash {} for options.-->
+				</label>
+			</div>		
+		</div>
+		<div class = "row">	
+			<div class = "large-8 columns">
+				<label> Nome
+					<% case mode when 'show' %>
+							<%= f.text_field 'name', :disabled => true %>
+						<% else %>
+							<%= f.text_field 'name', :required => true%>						
+					<% end %>
+				</label>
+			</div>
+			<div class = "large-2 columns">
+				<label> Data Pedido
+					<% case mode when 'show' %>
+							<%= f.text_field 'request_date', :class=> 'date_form', :disabled => true %>
+						<% else %>
+							<%= f.text_field 'request_date', :class=> 'date_form', :required => true, :value => Date.today	 %>	
+					<% end %>
+				</label>
+			</div>	
+			<div class = "large-2 columns">
+				<label> Situação
+					<% case mode when 'show' %>
+						<%= f.text_field 'situation', :disabled => true %>
+					<% else %>		
+						    <%= f.select( :situation, options_for_select([['A Entregar', '0'],['Entregue', '1'],['Finalizada', '2'],['Frustrada', '3'],['Cancelada', '4']]))%><!-- Because you only want to specify html_options, just pass in an empty Hash {} for options.-->	
+					<% end %>
+				</label>
+			</div>
+		</div>
+		<div class = "row">	
+			<div class = "large-2 columns">
+				<label> CEP
+					<% case mode when 'show' %>
+							<%= f.text_field 'zip_code', :disabled => true %>
+						<% else %>
+							<%= f.text_field 'zip_code', :class=> "zip_code", :required => true %>						
+					<% end %>
+				</label>
+			</div>
+			<div class = "large-6 columns">
+				<label> Endereço
+					<% case mode when 'show' %>
+							<%= f.text_field 'address', :disabled => true %>
+						<% else %>
+							<%= f.text_field 'address', :required => true %>						
+					<% end %>
+				</label>
+			</div>
+			<div class = "large-4 columns">
+				<label> Bairro
+					<% case mode when 'show' %>
+							<%= f.text_field 'neighborhood', :disabled => true %>
+						<% else %>
+							<%= f.text_field 'neighborhood', :required => true %>						
+					<% end %>
+				</label>
+			</div>
+		</div>
+		<div class = 'row'>	
+			<div class = "large-5 columns">
+				<label> Cidade
+					<% case mode when 'show' %>
+							<%= text_field :city, :description, :disabled=>true  %> <!-- Variable being set inside the controller-->  
+						<% when 'update' %>
+							  <%= f.select( :sys_city_id, options_for_select(SysCity.all.map{|s|[s.description + " - " + s.sys_state.uf , s.id]}, @model_instance.sys_city_id), {}, { :class => "ui fluid search dropdown" }) %><!-- Because you only want to specify html_options, just pass in an empty Hash {} for options. @model_instance.sys_city_id selects the ID for edit-->	
+						<%else%>
+ 						  <%= f.select( :sys_city_id, options_for_select(SysCity.all.map{|s|[s.description  + " - " + s.sys_state.uf , s.id]}), {}, { :class => "ui fluid search dropdown" }) %><!-- Because you only want to specify html_options, just pass in an empty Hash {} for options.-->
+					<% end %>
+				</label>
+			</div>
+			<div class = "large-5 columns">
+				<label> Complemento
+					
+				</label>
+			</div>
+			<div class = "large-2 columns">
+				<label> Valor do Risco
+					<% case mode when 'show' %>
+							<%= f.text_field 'value', :disabled => true %>
+						<% else %>
+							<%= f.text_field 'value', :required => true %>						
+					<% end %>
+				</label>
+			</div>
+		</div>	
+		<div class = "row">
+			
+		</div>
+		<div class = "row">
+			<div class = "large-2 columns">
+				<label> Chave
+					<% case mode when 'show' %>
+							<%= f.text_field 'key', :disabled => true %>
+						<%else%>
+						 	<%= f.text_field 'key', :required => true %>	
+					<% end %>
+				</label>
+			</div>	
+			<div class = "large-2 columns">
+				<label> Solicitante
+					<% case mode when 'show' %>
+							<%= f.text_field 'claimant', :disabled => true %>
+						<% else %>
+							<%= f.text_field 'claimant', :required => true %>						
+					<% end %>
+				</label>
+			</div>
+			<div class = "large-3 columns">
+				<label> Atividade
+					<% case mode when 'show' %>
+							<%= f.text_field 'activity', :disabled => true %>
+						<% else %>
+							<%= f.text_field 'activity', :required => true %>						
+					<% end %>
+				</label>
+			</div>
+		</div>
+	<div class = 'row'>
+		<ul class = "button-group radius">
+			
+			<% if mode == 'show' then %>
+				<li><%= link_to "Editar", {:action => 'edit'}, :class => 'button success' %></li>
+				<li><%= link_to "Voltar", {:action => 'index'}, :class => 'secondary button' %></li>
+				<li><%= link_to "Telefones", {:controller => 'ins_inspection_phones', :action => 'index', :inspector_id => @model_instance.id}, :class => 'button info' %></li>
+				<li><%= link_to "Arquivos", {:controller => 'ins_inspector_files', :action => 'index', :inspector_id => @model_instance.id}, :class => 'button info' %></li>
+				<li><%= link_to 'Itens', {:action => 'index', :controller => 'ins_inspection_items'}, :class => 'button' %></li>
+				<li><%= link_to 'Arquivos', {:action => 'index', :controller => 'ins_inspection_files'}, :class => 'button' %></li>
+			<% else %>
+				<li><%= f.submit 'Salvar', :class => 'button success' %></li>
+				<li><%= link_to 'Cancelar', {:action => 'index'}, :class => 'button alert' %></li>
+			<% end %>
+		</ul>
+	</div>	
+<% end %>
+
+<%= render 'partials/bottom'%>
+
+<%= javascript_tag do%> <!-- show the file button only if there's an insurance company checked --> 
+
+$(function() {
+    $('#company').change(function(){
+        $('#file_handler')[ ($("option[value='Selecionar']").is(":checked"))? "hide" : "show" ]();  
+    });
+});
+<% end %>

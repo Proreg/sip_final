@@ -1,0 +1,52 @@
+<tr>
+	<td>
+		<center>
+			<select name="new_items[][ins_classification]" id="item__ins_coverage_type">
+				<%= options_for_select(InsClassification.where(ins_insurance_company_id: InsInspection.find(params[:ins_inspection_id]).ins_insurance_company_id).map{|s|[s.description, s.id]}) %>
+			</select>
+		</center>
+	</td>
+	<td>
+		<center>
+			<select name="new_items[][ins_product]" id="item_ins_product"  class="ui fluid search dropdown" onchange="populateHonoraria(this, this.id)" >
+				<% honoraria = GetCompanyHonoraria.new(@inspection.ins_insurance_company.id, @inspection.inspection_value).format_rails %>	
+				<%= options_for_select(honoraria.map{|s|[s.ins_product.description, s.ins_product_id]}.insert(0, "")) %>
+			</select>
+		</center>
+	</td>
+	<td>
+		<center>
+			<input type="text" name="new_items[][deductible]" id="item_deductible" />
+		</center>
+	</td>
+	<td>
+		<center>
+			<input type="text" name="new_items[][amount]" id="item_amount" onblur="calcTotal(this.id);" required/>
+		</center>
+	</td>
+	<td>
+		<center>
+			<input type="text" name="new_items[][unitary_value]" id="item_unitary_value" class="money_value" onblur="calcTotal(this.id);"  required />
+		</center>
+	</td>
+	<td>
+		<center>
+			<input type="text" name="new_items[][total_value]" id="item_total_value" class="money_value"  required/>
+		</center>
+	</td>
+	<td>
+		<center>
+			<a href="#" class="remove_field tiny button alert">Remover</a>
+		</center>
+	</td>	
+</tr>
+
+<script>
+controlIdNumbers();
+
+jQuery(function($){
+	$(".money_value").maskMoney({symbol:'R$ ',
+	showSymbol:true, thousands:'.', decimal:',', symbolStay: true});
+	
+});	
+</script>

@@ -1,0 +1,16 @@
+<%= render 'partials/forms/edit_show_new',
+view_name: "Honorário da Cia",
+
+#field_name, header_name 
+table_fields: [['description', 'Descrição', 'text'],
+ ['ins_product', 'Produto','fk'], 
+ ['ins_insurance_company', 'Cia', 'fk'],
+ ['honorarium_value', 'Valor Honorários', 'money'],
+ ['initial_value', 'Valor Inicial', 'money'],
+ ['final_value', 'Valor Final', 'money'],
+ ['initial_area', 'Área Inicial', 'text'],
+ ['total_area', 'Área Total', 'text'],
+ ['sys_region', 'Região', 'fk']
+ ], 
+mode:'update'
+%>

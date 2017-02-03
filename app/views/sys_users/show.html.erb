@@ -1,0 +1,105 @@
+
+<%= render "partials/top" %>
+	<div class = "row">
+		<div class = "large-12 columns">
+			<h3 class="subheader">Usuário</h3>
+		</div>
+	</div>
+<%= form_for @model_instance, :url =>{:action => 'show', :id =>@model_instance} do |f| %>
+		<div class = "row">
+			<div class = "large-3 columns">
+				<label> Nome
+					
+					<% if @model_instance.hr_employee_id # Check if it's a employee or inspector 
+					%> 
+					<%=
+					text_field_tag 'Nome', # text_field_tag(name, value = nil, options = {}), send() converts a string to and object name-->
+				    @model_instance.hr_employee.name, # returns the description for the current field 
+				    :disabled=>true # disable since it's the show method
+					 %>
+					<% else%>
+					<%=
+					text_field_tag 'Nome', # text_field_tag(name, value = nil, options = {}), send() converts a string to and object name-->
+				    @model_instance.ins_inspector.name, # returns the description for the current field 
+				    :disabled=>true # disable since it's the show method
+					%>
+					<% end %>
+
+					
+				</label>
+			</div>		
+			<div class = "large-3 columns">
+				<label> Username
+					<%= f.text_field 'username', :disabled => true %>
+				</label>
+			</div>		
+			<div class = "large-3 columns">
+				<label> Acesso externo
+					<% if @model_instance.external_access == "t"%>
+						<%= f.text_field 'external_access', :value => "Sim", :disabled => true %>
+					<% else %>
+						<%= f.text_field 'external_access', :value => "Não", :disabled => true %>
+					<% end %>
+						
+				</label>
+			</div>		
+			<div class = "large-3 columns">
+				<label> Ativo
+					<% if @model_instance.active == "t"%>
+						<%= f.text_field 'active', :value => "Sim", :disabled => true %>
+					<% else %>
+						<%= f.text_field 'active', :value => "Não", :disabled => true %>
+					<% end %>
+						
+				</label>
+			</div>
+			<div class = "large-3 columns">
+				<label> Contagem Logins
+					<%= f.text_field 'sign_in_count', :disabled => true %>
+				</label>
+			</div>
+			<div class = "large-3 columns">
+				<label> Login atual em
+					<%= f.text_field 'current_sign_in_at', :disabled => true %>
+				</label>
+			</div>
+			<div class = "large-3 columns">
+				<label> IP ùltimo login
+					<%= f.text_field 'last_sign_in_ip', :disabled => true %>
+				</label>
+			</div>
+			<div class = "large-3 columns end">
+				<label> Último login em
+					<%= f.text_field 'last_sign_in_at', :disabled => true, :class => 'end' %>
+				</label>
+			</div>
+			
+		
+		</div>
+	<div class = 'row'>
+	<ul class = "button-group radius">
+		<li>
+			<% if @model_instance.hr_employee_id # checks if it's an employee or inspector
+			%>
+				<%= link_to "Voltar", {:controller=> 'hr_employees',:action => 'show', :id => SysUser.find(params[:id]).hr_employee_id}, :class => 'secondary button' %>
+		    <% else %>
+		     	<%= link_to "Voltar", {:controller=> 'ins_inspectors',:action => 'show', :id => SysUser.find(params[:id]).ins_inspector_id}, :class => 'secondary button' %>
+			<% end %>
+		</li>
+		<li>
+			<%= link_to "Nova senha", {:action => 'new_password'}, :class => 'secondary button', :data=> {:confirm=>  'Gerar nova senha?'} %>
+		</li>
+		<li>
+			<%= link_to "Editar", {:action => 'edit'}, :class => 'secondary button' %>
+		</li>
+		
+		<li>
+			<%= link_to "Grupos", {:action => 'included_groups'}, :class => 'success button' %>
+		</li>
+
+	</ul>
+
+	</div>	
+			
+<% end %>
+<%= render 'partials/bottom'%>

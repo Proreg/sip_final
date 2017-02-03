@@ -1,0 +1,19 @@
+<tr>
+	<td>
+		<center>
+			<select name="new_coverages[][ins_coverage_type]" id="coverages__ins_coverage_type">
+				<%= options_for_select(InsCoverageType.all.map{|s|[s.description, s.id]}) %>
+			</select>
+		</center>
+	</td>
+	<td>
+		<center>
+			<input type="text" name="new_coverages[][notes]" id="coverages__notes" />
+		</center>
+	</td>
+	<td>
+		<center>
+			<a href="#" class="remove_field tiny button alert">Excluir</a>
+		</center>
+	</td>
+</tr>

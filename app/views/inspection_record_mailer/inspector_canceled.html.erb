@@ -1,0 +1,21 @@
+<h2>Inspeção Cancelada pela CIA</h2>
+<p>
+	Numero da Inspeção: <%= @inspection.id.to_s %>
+</p>
+<p>
+	Nome do Segurado: <%= @inspection.name %>
+</p>
+<p>
+	Seguradora: <%= @inspection.ins_insurance_company.commercial_name %>
+</p>
+<p>
+	Chaves: <%= @inspection.key %>
+</p>
+<p>
+	Inspetor: <%= @inspection.ins_inspector.name %>
+</p>
+<p>
+	<b>Este é um e-mail automático e não deve ser respondido</b>
+</p>
+<p>Para acessar o painel do inspetor <a href='http://proreg.ddns.com.br:3000/painel_inspetor/<%= @inspection.ins_inspector.id%>'>Clique aqui</a></p>
+

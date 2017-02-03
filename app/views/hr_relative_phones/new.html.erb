@@ -1,0 +1,11 @@
+<%= render 'partials/forms/edit_show_new',
+view_name: "Novo Telefone Parente: " + @relative.name + "("+ @relative.hr_relative_type.description + ") - Funcionário " + @employee.name,
+
+#field_name, header_name 
+
+
+table_fields: [ ['area_code', 'Área', 'text'],
+['phone_number', 'Telefone', 'text'],
+['sys_telephone_type', 'Tipo Telefone', 'fk']], #table used by the index view
+mode:'create'
+%>

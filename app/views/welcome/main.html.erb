@@ -1,0 +1,29 @@
+<%= render 'partials/top' %> <!-- Renders the top of the pages-->
+<section class="main-section" >
+	<!-- content goes here -->
+	<% if flash[:teste] %>
+   		<div data-alert class=" alert-box alert radius notice">
+    		<center>
+    			<%= flash[:teste] %>
+    		</center>
+    		<a href="#" class="close">&times;</a>
+    	</div>
+  	<% end %>
+	<div data-alert class="alert-box success radius">
+		<% if sys_user_signed_in? %>
+		  Logado como: <strong><%= current_sys_user.username %></strong>.
+		  IP: <strong><%= current_sys_user.current_sign_in_ip %></strong>.
+		 
+		<% end %>
+			
+		<a href="#" class="close">&times;</a>
+	</div>
+	<div class="row">
+		<div class="large-12 columns">
+
+
+		</div>
+	</div>
+</section>
+
+<%= render 'partials/bottom' %> <!-- Renders the top of the pages-->

@@ -1,0 +1,49 @@
+
+<%= render "partials/top" %>
+	<div class = "row">
+		<div class = "large-12 columns">
+			<h3 class="subheader"> Novo apontamento </h3>
+		</div>
+	</div>
+<%= form_for @model_instance, :url =>{:action => 'create', :id =>@model_instance} do |f| %>
+     <div class = "row">
+	 	<div class = "large-4 columns">
+			<label> Tipo Inspeção
+				<%= f.select( :ins_record_type_id, options_for_select(InsRecordType.all.map{|s|[s.description, s.id]}), {}, { :class => "ui fluid search dropdown" })%><!-- Because you only want to specify html_options, just pass in an empty Hash {} for options.-->			
+			</label>
+		</div>		
+		<div class = "large-3 columns">
+			<label> Data/Hora
+				<%= f.text_field 'rec_datetime', :id=> 'datetime', :required => true %>							
+			</label>
+		</div>
+		<div class = "large-2 columns end">
+			<label> Incluido por
+				<%= #f.check_box :ind_include, {}, 't', 'f'
+				 %>
+				<%= f.select( :ind_include, options_for_select([['Funcionario', 'E'],['Inspetor', 'I']]),{}, {:disabled => true})%>							
+			</label>
+		</div>
+	</div>
+	<div class = 'row'>		
+		<div class = "large-9 columns">
+			<label> Observações Internas
+				<%= f.text_area 'internal_notes', :required => true, rows: 6 %>							
+			</label>
+		</div>
+	</div>
+	<div class = 'row'>	
+		<div class = "large-9 columns">
+			<label> Observações Externas
+				<%= f.text_area 'external_notes', :required => true, rows: 6 %>							
+			</label>
+		</div>	
+	</div>
+	<div class = 'row'>
+		<ul class = "button-group radius">
+				<li><%= f.submit 'Salvar', :class => 'button success' %></li>
+				<li><%= link_to 'Cancelar', {:action => 'index'}, :class => 'button alert' %></li>
+		</ul>
+	</div>	
+<% end %>
+<%= render 'partials/bottom'%>

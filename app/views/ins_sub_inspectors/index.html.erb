@@ -1,0 +1,6 @@
+<%= render 'partials/forms/index',
+view_name: "Subinspetores Inspetor: " + InsInspector.find(params[:inspector_id]).name,
+ 
+#field_name, header_name 
+table_fields: [['name', 'Nome'], ['cpf', 'CPF'], ['rg', 'RG'], [:sys_city, 'Cidade', 'fk'],] #table used by the index view
+%>

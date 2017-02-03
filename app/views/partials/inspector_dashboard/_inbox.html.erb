@@ -1,0 +1,55 @@
+	<div id="scheduling_problem" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+		<div class = "row">
+			<div class = "large-12 columns">
+				<h3 class="subheader"> Problema Agendamento </h3>
+			</div>
+		</div>
+		<%= form_tag action: "scheduling_problem" do %>
+			<div class = "large-12 columns">
+				<label> Motivo
+					<%= text_field_tag 'reason', "", required: true %>							
+				</label>
+			</div>	
+			
+		<%= submit_tag("Enviar", class: "button success") %>
+	  	<% end %>		
+		<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+	</div>
+	
+	
+	<div id="reject_inspection" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+		<div class = "row">
+			<div class = "large-12 columns">
+				<h3 class="subheader"> Rejeitar Inspeção </h3>
+			</div>
+		</div>
+		<%= form_tag action: "reject_inspection" do %>
+			<div class = "large-12 columns">
+				<label> Motivo
+					<%= text_field_tag 'reason', "", required: true %>							
+				</label>
+			</div>	
+			
+		<%= submit_tag("Enviar", class: "button success") %>
+	  	<% end %>		
+		<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+	</div>
+
+	<div id="scheduling" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+	  <h4 id="modalTitle"> Agendamento </h2>
+	  	<%= form_tag({:action => "scheduling"},{:onsubmit => "return validateFutureDate();"}) do %>
+				<label> Data
+					<%= text_field_tag('inspector_scheduling_date', '', :required=>true, :class => "date_form") %>
+				</label>
+				<label> Pessoa
+					<%= text_field_tag('person', '', :required=>true) %>
+				</label>
+				
+				<div id="invalid_date_message" style="color: red;">
+					
+				</div>
+			<%= submit_tag("Enviar", class: "button success") %>
+
+	  	<% end %>	
+	  <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+	</div>

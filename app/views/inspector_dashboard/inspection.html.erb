@@ -1,0 +1,222 @@
+<%= render "partials/top" %>
+<style>
+	#selectedFiles img {
+		max-width: 125px;
+		max-height: 125px;
+		float: left;
+		margin-bottom:10px;
+	}
+</style>
+	<div class = "row">
+		<div class = "large-12 columns">
+			<h3 class="subheader">Inspeção <%= @inspection.id %></h3>
+		</div>
+	</div>
+	
+		<div class = "row">
+			<div class = "large-2 columns">
+				<label> Código
+					<%= text_field_tag('id', @inspection.id, :disabled => true )%>
+				</label>
+			</div>		
+			<div class = "large-4 columns">
+				<label> Seguradora
+					<%= text_field_tag('insurance_company', @inspection.ins_insurance_company.commercial_name, :disabled=>true) %>
+					</label>
+			</div>	
+			<div class = "large-6 columns">
+				<label> Nome Inspeção
+					<%= text_field_tag('name', @inspection.name, :disabled=>true) %>
+				</label>
+			</div>
+		</div>	
+		<div class = "row">
+			<div class = "large-2 columns">
+				<label> Chave
+					<%= text_field_tag('key', @inspection.key, :disabled=>true) %>
+				</label>
+			</div>	
+			<div class = "large-2 columns">
+				<label> Data Pedido
+					<%= text_field_tag('request_date', @inspection.request_date, :disabled=>true,:class=> 'date_form') %>
+				</label>
+			</div>	
+			<div class = "large-4 columns">
+				<label> Observações
+					<%= text_field_tag('inspection_notes', @inspection.notes, :disabled=>true) %>
+				</label>
+			</div>	
+			<div class = "large-2 columns">
+				<label> Área
+					<%= text_field_tag('area', @inspection.area, :disabled=>true) %>
+				</label>
+			</div>	
+			<div class = "large-2 columns">
+				<label> Data Agendamento
+					<%= text_field_tag('scheduling_date', @inspection.scheduling_date, :disabled=>true, :class=> 'date_form') %>
+				</label>
+			</div>	
+			
+			
+		</div>
+		<div class = "row">
+			<div class = "large-5 columns">
+				<label> Endereço
+					<%= text_field_tag('address', @inspection.address, :disabled=>true) %>
+				</label>
+			</div>	
+			<div class = "large-3 columns">
+				<label> Bairro
+					<%= text_field_tag('neighborhood', @inspection.neighborhood, :disabled=>true) %>
+				</label>
+			</div>	
+			<div class = "large-2 columns">
+				<label> CEP
+					<%= text_field_tag('zip_code', @inspection.zip_code, :disabled=>true) %>
+				</label>
+			</div>	
+			<div class = "large-2 columns">
+				<label> Cidade
+					<%= text_field_tag('city', @inspection.sys_city.try(:description) + " - " + @inspection.sys_city.sys_state.uf , :disabled=>true) %>
+				</label>
+			</div>	
+		</div>
+		<div class = "row">
+			<div class = "large-4 columns">
+				<label> Recomendação
+					<%= text_field_tag('recomendation', @inspection.recomendation, :disabled=>true) %>
+				</label>
+			</div>	
+			<div class = "large-5 columns">
+				<label> Orientação
+					<%= text_field_tag('guider', @inspection.guider, :disabled=>true) %>
+				</label>
+			</div>	
+			<div class = "large-2 columns">
+				<label> Ind Urgente
+					<%= text_field_tag('ind_urgente', @inspection.ind_urgent, :disabled=>true) %>
+				</label>
+			</div>
+			<div class = "large-1 columns">
+				<label> Atividade
+					<%= text_field_tag('activity', @inspection.activity, :disabled=>true) %>
+				</label>
+			</div>	
+		</div>
+	<div class = 'row'>
+		<ul class = "button-group radius">
+			<%= link_to 'Voltar', {:action => 'index'}, :class => 'button success' %>
+			<% if params[:state] == "inbox"%>
+				<%= render "partials/inspector_dashboard/inbox_buttons" %>
+				<%= render "partials/inspector_dashboard/inbox" %>
+			<% elsif params[:state] == "in_progress" %>
+				<%= render "partials/inspector_dashboard/in_progress_buttons" %>
+				<%= render "partials/inspector_dashboard/send_report" %>
+				<%= render "partials/inspector_dashboard/in_progress" %>
+			<% elsif params[:state] == "to_send" %>
+				<%= render "partials/inspector_dashboard/send_report" %>
+			<% end %>
+				<%= render "partials/inspector_dashboard/all_buttons" %>
+				<%= render "partials/inspector_dashboard/all" %>
+		</ul>
+	</div>	
+	
+	<!-- POPUP BUTTONS -->
+	
+	<input type="hidden" name="control" id="control_value" value="1">
+	<input type="hidden" name="control" id="km_values" value="<%= GetInspectorKm.new(@inspector.id).format  %>">
+<%= render 'partials/bottom'%>
+
+<script>
+function validateFutureDate(){
+	var invalid_date_message = document.getElementById("invalid_date_message");
+	
+	clean();
+	
+ 	today = moment().startOf('day');
+ 	form_date = document.getElementById("inspector_scheduling_date").value;
+ 	future = moment(form_date, "DD/MM/YYYY")
+ 	
+ 	res = future.diff(today, 'days');
+ 	if (isNaN(res)){
+ 		invalid_date_message.innerHTML += 'Data Inválida.';
+ 		return false;	
+ 	}else{
+ 		if (res<0){
+ 			invalid_date_message.innerHTML += 'Data deve ser a partir de hoje.';
+ 			return false;	
+ 		}else{
+ 			return true;	
+ 		}
+ 	}
+ };
+ 
+function clean() {
+    $('#invalid_date_message').html('');
+}
+$(document).ready(function() {
+    $('#inbox').DataTable();
+    $('#execute').DataTable();
+    $('#to_send').DataTable();
+} );
+
+jQuery(document).ready(function($) {
+    $(".clickable-row").click(function() {
+        window.document.location = $(this).data("href");
+    });
+});
+
+
+ 	var selDiv = "";
+    document.addEventListener("DOMContentLoaded", init, false);
+    
+    function init() {
+        document.querySelector('#files_').addEventListener('change', handleFileSelect, false);
+        selDiv = document.querySelector("#selectedFiles");
+        document.querySelector('#files_frustated_').addEventListener('change', handleFileSelect, false);
+        selDiv = document.querySelector("#selectedFilesFrustrated");
+    }
+        
+    function handleFileSelect(e) {
+        
+        if(!e.target.files) return;
+        
+        selDiv.innerHTML = "";
+        
+        var files = e.target.files;
+        for(var i=0; i<files.length; i++) {
+            var f = files[i];
+            
+            selDiv.innerHTML += f.name + "<br/>";
+
+        }
+        
+    }
+
+    
+$(document).ready(function() {
+    var max_fields_item      = 10; //maximum input boxes allowed
+    var wrapper_item         = $(".input_fields_wrap_item"); //Fields wrapper
+    var add_button_item      = $(".add_field_button_item"); //Add button ID
+    var control_value = document.getElementById("control_value");
+    
+    var y = 0; //initlal text box count
+    $(add_button_item).click(function(e){ //on add input button click
+        e.preventDefault();
+        if(y < max_fields_item){ //max input box allowed
+            y++; //text box increment
+            //What will be shown when user click button
+             control_value.value = y;
+
+            $(wrapper_item).append("<%= raw escape_javascript(render(:partial => '/partials/js_append/inspector_items')) %>")
+    				 
+        }
+    });
+    
+    $(wrapper_item).on("click",".remove_field", function(e){ //user click on remove text
+    	//consider the parents of the remove button
+        e.preventDefault(); $(this).parent('center').parent('td').parent('tr').remove(); y--;
+    })
+});
+    
+</script>

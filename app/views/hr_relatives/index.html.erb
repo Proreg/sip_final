@@ -1,0 +1,10 @@
+<%= render 'partials/forms/index',
+view_name: "Parentes de " + @employee.name,
+
+#
+#field_name, header_name, DB strucutre(If it's a foreign key , regular field, boolean...)
+#For Foreign Key, send a symbol instead of the string 
+table_fields: [['name', 'Nome', 'text'],  
+ [:hr_relative_type, 'Tipo Parente', 'fk'],
+ ['dependente', 'Depentente', 'bool']] #table used by the index view
+%>

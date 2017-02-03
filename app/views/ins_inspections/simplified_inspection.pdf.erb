@@ -1,0 +1,109 @@
+
+	
+	<div class = "row">
+		<center>
+			<h1 class="subheader">Pedido Inspeção </h3>
+		</center>
+	</div>
+	
+		<div class = "row">
+			<div class = "small-2 columns">
+				<label> <b>Código</b>
+				 	<p><%=  @inspection.id%> </p>
+				</label>
+			</div>		
+			<div class = "small-7 columns">
+				<label>
+				 <b>Nome Inspeção</b>
+					<p> <%= @inspection.name %></p>
+				</label>
+			</div>	
+			<div class = "small-3 columns">
+				<label> <b>Chave</b>
+					<p>  <%= @inspection.key %> </p> 
+				</label>
+			</div>	
+		</div>	
+		<div class = "row">
+			<div class = "small-4 columns">
+				<label> <b>Seguradora</b>
+						<p><%=  @inspection.ins_insurance_company.commercial_name %></p>
+					</label>
+			</div>
+			<div class = "small-2 columns">
+				<label> <b>Data Pedido</b>
+					<p><%=  @inspection.request_date&.to_date   %></p>
+				</label>
+			</div>	
+			<div class = "small-3 columns">
+				<label> <b>Área</b>
+					<p><%= @inspection.area %></p>
+				</label>
+			</div>	
+			<div class = "small-3 columns">
+				<label> <b>Valor</b>
+					<p><%=  Money.new(@inspection.inspection_value).format %></p>
+				</label>
+			</div>	
+		</div>
+		
+		<div class = "row">
+			<div class = "small-2 columns">
+				<label> <b>Situação</b>
+					<% situations =  {0=>"A Entregar", 2=>"Entregue", 3=>"Finalizada", 8=>"Frustrada", 9=>"Cancelada"} %> 
+					<p><%=  situations[@inspection.situation.to_i] %></p>
+				</label>
+			</div>	
+			
+			<div class = "small-2 columns">
+				<label> <b>Agendamento</b>
+					<p><%=  @inspection.scheduling_date&.to_date %></p>
+				</label>
+			</div>	
+			
+			<div class = "small-6 columns">
+				<label> <b>Cidade</b>
+					<p><%= @inspection.sys_city.try(:description) + " - "+ @inspection.sys_city.sys_state.try(:uf) %></p>
+				</label>
+			</div>	
+			<div class = "small-2 columns">
+				<label> <b>CEP</b>
+					<p><%=  @inspection.zip_code %></p>
+				</label>
+			</div>	
+			
+		</div>
+		
+		<div class = "row">
+			
+			<div class = "small-8 columns">
+				<label> <b>Endereço</b>
+					<p><%= @inspection.address %></p>
+				</label>
+			</div>	
+			<div class = "small-4 columns">
+				<label> <b>Bairro</b> 
+					<p><%=  @inspection.neighborhood %>	</p>
+				</label>
+			</div>	
+		</div>
+		
+		<div class = "row">
+			
+			<div class = "small-12 columns">
+				<label> <b>Observações</b>
+					<p><%=  @inspection.notes %></p>
+				</label>
+			</div>	
+		 	<div class = "small-12 columns">
+				<label> <b>Recomendação</b>
+					<p><%=  @inspection.recomendation %></p>
+				</label>
+			</div>	
+			<div class = "small-12 columns">
+				<label> <b>Orientação</b>
+					<p><%=  @inspection.guider %></p>
+				</label>
+			</div>	
+		</div>
+ 

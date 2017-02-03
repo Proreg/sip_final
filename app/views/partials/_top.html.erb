@@ -1,0 +1,141 @@
+<!-- Partials files in rails start with the underscore '_'  -->
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+	<head>
+      <meta charset="utf-8" />
++     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
++ 
++     <title>SIP - Proreg</title>
++ 
++     <%= stylesheet_link_tag    "application" %>
++     <%= javascript_include_tag "application", 'data-turbolinks-track' => true %>
++     <%= csrf_meta_tags %>
+	</head>
+
+	<body >
+		<div class="off-canvas-wrap" data-offcanvas >
+			<div class="inner-wrap">
+				<nav class="tab-bar" style="height: 100px">
+					<section class="left-small"style="height: 100px">
+						<a class="left-off-canvas-toggle menu-icon" style="height: 100px"href="#"><span></span></a>
+					</section>
+					<section class="middle tab-bar-section">
+						<a href="/"> <img class="logo"alt="Proreg" src="/images/logo.png" style="height: 200%"></a><!-- '/' indicates the 'public' folder-->
+					</section>
+					<section class="right-small"style="height: 100px">
+						<a class="right-off-canvas-toggle menu-icon" style="height: 100px"href="#"><span></span></a>
+					</section>
+				</nav>
+
+				<aside class="left-off-canvas-menu">
+					<ul class="off-canvas-list">
+						<li>
+							<label>Menu</label>
+						</li>
+							
+						<% 
+						  query= "SELECT DISTINCT PER.SHOW_IT, PER.SYS_MENU_ID, MENU.DESCRIPTION, MENU.CONTROLLER, MENU.ORDER_MENU, MENU.ACTION FROM SYS_USER_X_GROUPS UXG , SYS_GROUPS GROUPS , SYS_PERMISSIONS PER, SYS_MENUS MENU WHERE UXG.SYS_USER_ID = #{current_sys_user.id} AND GROUPS.ID = PER.SYS_GROUP_ID AND GROUPS.ID =  UXG.SYS_GROUP_ID AND MENU.ID = PER.SYS_MENU_ID  AND PER.SHOW_IT = 't' ORDER BY MENU.ORDER_MENU"  
+						  menu_list = ActiveRecord::Base.connection.exec_query(query)
+						  
+						  flag1 = 'f' # Flag controls how many tags must be closed by printing one or two </ul>. 
+						  
+						  menu_list.each do |menu|
+							  
+						    if menu['order_menu'] != nil # if there's order_menu, it goes to the menu, Otherwise it's a permission without index or anoter specific case
+				         	
+				         	menu_order = menu['order_menu'].split('.') # turns '1.2.3' into hash ['1', '2','3']
+				         	
+				         	  if menu['controller'] == nil # If no controller, it is a title. 
+				         	  	if menu_order.count == 2 # Secondary title. Ex: order_menu = 1.2, RH GERAL
+					     		  flag1 = 'tt'  # Indicates to print </ul> twice
+					     		  %>
+									<li>
+										<a href="#" class="off-canvas-submenu-call"><%= menu['description'] %> <span class="right"> + </span></a>
+									</li>
+										<ul class="off-canvas-submenu">
+							      <%else #It's a primary title. ex: order=1, RH
+								     if flag1 == 't' %>
+		 							    </ul>
+							         <% elsif flag1 == 'tt' %>
+										</ul>
+										</ul>
+				           	      <% end 
+								     flag1 = 't'
+						      	  %>
+									<li>
+										<a href="#" class="off-canvas-submenu-call"><%= menu['description'] %> <span class="right"> + </span></a>
+									</li>
+										<ul class="off-canvas-submenu"> <%
+								  end
+								else # not a submanu, prints the button
+								%>
+								<li class='menu-bullet'>
+									<%= link_to menu['description'], {:controller=> menu['controller'], :action => menu['action'] } %>
+								</li>
+						 <%  end
+							end
+						  end
+						%>
+
+				  </ul> <!-- Close main UL tags -->
+				</ul>
+				</aside>
+				<aside class="right-off-canvas-menu">
+					<!--
+					<ul class="off-canvas-list">
+						<li>
+							<label>Menu Usuario</label>
+						</li>
+						<li>
+							<a href="#" class="off-canvas-submenu-call">Pagina Inicial</a>
+						</li>
+						<li>
+							<a href="#" class="off-canvas-submenu-call">Geral<span class="right"> + </span></a>
+						</li>
+						<ul class="off-canvas-submenu">
+							<li>
+								<a href="#">Ficha Cadastral</a>
+							</li>
+							<li>
+								<a href="#">Configurações</a>
+							</li>
+							<li>
+								<a href="#">Classificados</a>
+							</li>
+						</ul>
+						<li>
+							<a href="#" class="off-canvas-submenu-call">Geral<span class="right"> + </span></a>
+						</li>
+						<ul class="off-canvas-submenu">
+							<li>
+								<a href="#"></a>
+							</li>
+							<li>
+								<a href="#">Proweb</a>
+							</li>
+							<li>
+								<a href="#">Chat - Proreg</a>
+							</li>
+						</ul>
+						-->
+						<li>
+							<%= button_to "Sair", destroy_sys_user_session_path, :method => 'delete' , :class=>'off-canvas-submenu-call'%>
+						</li>
+				</aside>
+				<% if flash[:msg_error] %>
+				<div data-alert class="alert-box alert radius">
+					<%= flash[:msg_error] %>
+					<a href="#" class="close">&times;</a>
+				</div>
+				<% end %>
+				<% if flash[:msg_success] %>
+				<div data-alert class="alert-box success radius">
+					<%= flash[:msg_success] %>
+					<a href="#" class="close">&times;</a>
+				</div>
+				<% end %>

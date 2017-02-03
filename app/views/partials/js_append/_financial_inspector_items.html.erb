@@ -1,0 +1,39 @@
+<tr>
+	<td>
+		<center>
+			<select name="new_items[][ins_inspector_product]" id="item_ins_product" onchange="populateKm(this, this.id)" class="ui fluid search dropdown">
+				<%= options_for_select(InsInspectorProduct.all.map{|s|[s.description, s.id]}.insert(0, ""))%>
+			</select>
+		</center>
+	</td>1
+	<td>
+		<center>
+			<input type="text" name="new_items[][amount]" id="item_amount" onblur="calcTotal(this.id);" required/>
+		</center>
+	</td>
+	<td>
+		<center>
+			<input type="text" name="new_items[][unitary_value]" id="item_unitary_value" class="money_value" onblur="calcTotal(this.id);" required/>
+		</center>
+	</td>
+	<td>
+		<center>
+			<input type="text" name="new_items[][total_value]" id="item_total_value" class="money_value" required/>
+		</center>
+	</td>
+	<td>
+		<center>
+			<a href="#" class="remove_field tiny button alert">Remover</a>
+		</center>
+	</td>
+</tr>
+
+<script>
+controlIdNumbers();
+
+jQuery(function($){
+	$(".money_value").maskMoney({symbol:'R$ ',
+	showSymbol:true, thousands:'.', decimal:',', symbolStay: true});
+	
+});	
+</script>

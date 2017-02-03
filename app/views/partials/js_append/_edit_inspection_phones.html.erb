@@ -1,0 +1,37 @@
+<tr>
+	<td>
+		<center>
+			<select name="new_phones[][sys_telephone_type]" id="phone_sys_phone_type">
+				<%= options_for_select(SysTelephoneType.all.map{|s|[s.description, s.id]}) %>
+			</select>
+		</center>
+	</td>
+	<td>
+		<center>
+			<input type="text" name="new_phones[][phone_number]" id="phone_number" class="complete_phone_number" required/>
+		</center>
+	</td>
+	<td>
+		<center>
+			<a href="#" class="remove_field_phone tiny button alert">Excluir</a>
+		</center>
+	</td>
+</tr>
+
+<script>
+	
+	jQuery(function($){
+   $(".complete_phone_number").focusout(function(){
+	    var phone, element;
+	    element = $(this);
+	    element.unmask();
+	    phone = element.val().replace(/\D/g, '');
+	    if(phone.length > 10) {
+	        element.mask("(99)99999-999?9");
+	    } else {
+	        element.mask("(99)9999-9999?9");
+	    }
+	}).trigger('focusout');
+	});
+
+</script>

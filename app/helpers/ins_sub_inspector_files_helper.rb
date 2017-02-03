@@ -1,0 +1,2 @@
+module InsSubInspectorFilesHelper
+end

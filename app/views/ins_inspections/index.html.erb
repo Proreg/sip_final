@@ -1,0 +1,11 @@
+<%= render 'partials/forms/index',
+view_name: "Inspeções",
+
+#field_name, header_name 
+table_fields: [ ['id', 'Número', 'text'],
+['key', 'Chave', 'text'],
+['name', 'Nome', 'text'],
+['address', 'Endereço', 'text'],
+[:sys_city, 'Cidade', 'fk'],
+[:ins_insurance_company, 'Seguradora', 'fk']]
+%>

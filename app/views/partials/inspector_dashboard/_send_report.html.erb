@@ -1,0 +1,49 @@
+
+<a href="#" class="button success" data-reveal-id="send_report">Enviar Laudo</a>
+
+<div id="send_report" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+		<%= form_tag({action: :send_report}, multipart: true) do %>
+					
+	  	<div class = "row">
+			<div class = "large-12 columns">
+				<h3 class="subheader">Enviar Laudo - Inspeção <%= @inspection.id %> - <%= @inspection.name %> </h3>
+			</div>
+		</div>
+		
+		<div class = "row">
+			<div class = "large-12 columns">
+				  <div class="content active" id="panel1">
+				    <%= file_field_tag 'files[]', multiple: true %>
+						<div id="selectedFiles"></div>
+				  </div>
+			</div>
+		</div> 
+
+		<div class='row'>
+    		<div class='columns large-12'>    		
+    			<table>
+    				<thead>
+    					<tr>
+							<th>Produto</th>
+							<th>Quantidade</th>
+							<th>Valor Unitário</th>
+							<th>Valor Total</th>
+							<th>Franquia</th>
+							<th>Observações</th>
+							<th>Deletar</th>
+	    				</tr>
+	    			</thead>
+    				<tbody class="input_fields_wrap_item"> 
+    					<button class="add_field_button_item tiny">Adicionar Despesa</button>
+    				</tbody>
+				</table>
+	    	</div>	
+		</div>			 
+  		<%= submit_tag("Enviar")%>
+		<% end %>
+		<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+</div>
+
+
+
+	

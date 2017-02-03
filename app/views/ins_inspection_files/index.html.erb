@@ -1,0 +1,55 @@
+<%= render "partials/top" %>
+	<div class = "row">
+		<div class = "large-12 columns">
+			<h3 class="subheader">Arquivos Inspeção <%= @inspection.id %> - <%= @inspection.name %> </h3>
+		</div>
+	</div>
+	
+	<div class = "row">
+		<div class = "large-12 columns">
+			  <div class="content active" id="panel1">
+			  	<table id="inbox" class="display" cellspacing="0" width="100%">
+			        <thead>
+			            <tr>
+			                <th>Descrição</th>
+			                <th>Download</th>
+			                
+			            </tr>
+			        </thead>
+			        <tbody>
+			        	<% @files.each do |file| %>
+						    <tr >
+						    	<% if file.inspection_path %>
+						    		<td> <%= text_field_tag('n', File.basename(file.inspection_path), disabled: true) %> </td>
+						    	<% elsif file.ins_report_file_id %>
+									<td> <%= text_field_tag('n', File.basename(file.ins_report_file_id), disabled: true) %> </td>					    	
+						    	<% elsif file.inspector_upload %>
+									<td> <%= text_field_tag('n', File.basename(file.inspector_upload.file.file), disabled: true) %> </td>					    	
+						    	<% end %>
+				                <td> <%= link_to 'Download', {:action => 'download', :ins_inspection_file_id => file.id}, :class => 'button tiny success' %></td>
+				            </tr>     
+					    <% end %>
+			        </tbody>
+			    </table>
+			  </div>
+			 
+		</div>
+		<%= link_to "Adicionar", {action: "add"}, class: "button success" %>
+		<%= link_to 'Voltar', {:controller => "ins_inspections",:action => 'show',  :id =>  params[:ins_inspection_id]}, :class => 'button success' %>
+	</div> 
+	
+<%= render 'partials/bottom'%>
+
+<script>
+	$(document).ready(function() {
+    $('#inbox').DataTable();
+    $('#execute').DataTable();
+    $('#to_send').DataTable();
+} );
+
+jQuery(document).ready(function($) {
+    $(".clickable-row").click(function() {
+        window.document.location = $(this).data("href");
+    });
+});
+</script>

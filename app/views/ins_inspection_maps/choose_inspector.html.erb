@@ -1,0 +1,212 @@
+<style>
+	#map {
+        height: 100%;
+        width: 100%;
+    }
+</style>
+   
+<%= render "partials/top" %>
+	<div class = "row">
+		<div class = "large-12 columns">
+			<h3 class="subheader">Escolha Inspetor</h3>
+		</div>
+	</div>
+
+<%= form_tag({:controller => "ins_inspection_maps", :action => "inspector_chosen"}, :method => "post", :id => 'choose_inspector') %> 
+	<div class = "row">
+		<div class = "large-7 columns">
+			<div id="map">
+			</div>
+		</div>		
+		<div class = "large-5 columns">
+			<b>
+				Destino: 
+				<%=	@response["destination_addresses"].first # Show inspection address
+				%> 
+			</b>
+			<br>
+			<br>
+			<%@cities_inspectors.each_with_index do |city_info, index| # Show all cities got from GetNearbyCities class 
+			%>
+				<b>
+					Origem:
+					<% city = SysCity.find(city_info.first) %>
+					<%= city.description %>
+					<%= @response["rows"][index]["elements"].first["distance"]["text"] # Show response from JSON's Distance MAtrix API 
+					%>
+					<%= @response["rows"][index]["elements"].first["duration"]["text"] # Show response from JSON's Distance MAtrix API
+					%>
+				</b>
+				<br>
+				<% city_info.second.each do |inspector_sub_inspector_id| # Show inspectors for the current city
+					insp_sub_id = inspector_sub_inspector_id.split("|").first
+					type_inspector_sub_inspector =  inspector_sub_inspector_id.split("|").second
+					if type_inspector_sub_inspector == "I"
+				  	  inspector_sub_inspector = InsInspector.find(insp_sub_id)
+				  	  type= "Insp"
+					else	
+	   				  inspector_sub_inspector = InsSubInspector.find(insp_sub_id)  	
+					  type= "Sub_insp"	
+					end	
+				%>
+					<%= radio_button_tag(:inspector, inspector_sub_inspector.id.to_s + "|" + @response["rows"][index]["elements"].first["distance"]["text"] ,  {}, :onchange => 'multipleOrigins()') # Call JS function to render multiple origins in the map
+					%> 
+			
+					[<%=label_tag(:type, type)%>]
+					<%= label_tag(:inspector_name, inspector_sub_inspector.name) %>
+					
+					
+					<% # get inspector current inspections and current in the city 
+		# Show number of inspections for an inspector. General and per city.
+		   #     current_query = "select count(*) from ins_inspections insp, ins_inspection_records rec where insp.id = rec.ins_inspection_id and insp.situation in ('0') and rec.ins_record_type_id in ('6', '7', '10', '3','13','20')  and insp.ins_inspector_id =" + inspector_sub_inspector.id.to_s + "and rec.rec_datetime = ((select max(rec1.rec_datetime)                                  from ins_inspection_records rec1                                 where insp.id = rec1.ins_inspection_id                                  and insp.situation in ('0')                                   and rec.ins_record_type_id in ('6', '7', '10', '3','13','20')                                    and insp.ins_inspector_id = 144                                   and insp.sys_city_id = " + city.id.to_s + "))"
+			          
+				#	@current_query = ActiveRecord::Base.connection.exec_query(current_query)
+					
+				#	current_query_with_city = 	"select count ( * )      from ins_inspections insp        , ins_inspection_records rec     where insp.id = rec.ins_inspection_id       and insp.situation in ('0')       and rec.ins_record_type_id in ('6', '7', '10', '3','13','20')        and insp.ins_inspector_id = " + inspector_sub_inspector.id.to_s + "    and insp.sys_city_id = " + city.id.to_s + "      and rec.rec_datetime in ((select max(rec1.rec_datetime)                                  from ins_inspection_records rec1                                 where insp.id = rec1.ins_inspection_id                                  and insp.situation in ('0')                                   and rec.ins_record_type_id in ('6', '7', '10', '3','13','20')                                    and insp.ins_inspector_id = " + inspector_sub_inspector.id.to_s + "   and insp.sys_city_id = " + city.id.to_s + "))"  
+			          
+				#	@current_query_with_city = ActiveRecord::Base.connection.exec_query(current_query_with_city)
+					%>
+					<%=# "(" + @current_query_with_city.rows.first.first.to_s + ") - (" + @current_query.rows.first.first.to_s + ")"
+					 %> 
+					
+					<br>
+				<% end %>
+				<br>		
+			<%	end	%>
+			<%= radio_button_tag(:inspector, 'custom_inspector',  {}, :onchange => 'changeMap()') # Change map to show only one origin and show ouytput for custom inspector
+			%> 
+			<label>Selecionar outro inspetor:</label>
+			
+			<%= select_tag( :inspector_select, # Put value with city and state descriptions to be used by the JS function
+				options_for_select(InsInspector.where(status:"A").map{|s|[s.name, (s.id.to_s + "|" + s.sys_city.description + " " + s.sys_city.sys_state.description )]}),
+			{ :class => "ui fluid search dropdown", :onchange => 'changeMap()' }) %>
+			<b>
+			<div id="output" ></div>  <!-- Distance Matrix API response -->
+			<input type="hidden" name="km" id="output_param">
+			</b>
+			<br>
+			<div class = 'row'>
+			<ul class = "button-group radius">
+			<li><%= submit_tag 'Salvar', :class => 'button success' %></li>
+			</ul>
+			</div>
+		  </div>
+			</div>		
+	  </div> 
+<%= render 'partials/bottom'%>
+<%= javascript_tag do %>
+ 
+document.querySelector('[name=inspector]').checked = true; //Checks the first radio in the document
+ 
+var flagMultiple = false // Used to reload the map only if necessary
+
+function multipleOrigins(){
+	if(flagMultiple == false){ // If a inspector from multiple origins is already selected, it doesnt load the map again
+		var destinations = ["<%= @destinations %>"]
+		var origins =  [<% @origins.split("|").each do |destination| %> // Separate multiple origins
+						   	 "<%= destination %>",	
+	    				<%end%>]
+		initMap(origins, destinations)
+		flagMultiple = true
+	}	
+}
+
+
+function changeMap(){ // For a custom inspector, single origin
+	flagMultiple = false
+	
+	var origins = document.getElementById("inspector_select").value.split("|")[1].split("|") // Separate values received by the checkbox value
+	var destinations = ["<%= @destinations %>"]
+		
+	initMap(origins, destinations) 
+}
+
+
+
+function initMap(origins, destinations) { // Code from Google Distance MAtrix Sample https://developers.google.com/maps/documentation/javascript/examples/distance-matrix
+  var bounds = new google.maps.LatLngBounds;
+  var markersArray = [];
+
+  var destinationIcon = 'https://chart.googleapis.com/chart?' +
+      'chst=d_map_pin_letter&chld=D|FF0000|000000';
+  var originIcon = 'https://chart.googleapis.com/chart?' +
+      'chst=d_map_pin_letter&chld=O|FFFF00|000000';
+  var map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 55.53, lng: 9.4},
+    zoom: 10
+  });
+  var geocoder = new google.maps.Geocoder;
+
+  var service = new google.maps.DistanceMatrixService;
+  service.getDistanceMatrix({
+    origins: origins,
+   		 destinations: destinations,
+    travelMode: google.maps.TravelMode.DRIVING,
+    unitSystem: google.maps.UnitSystem.METRIC,
+    avoidHighways: false,
+    avoidTolls: false
+  }, function(response, status) {
+    if (status !== google.maps.DistanceMatrixStatus.OK) {
+      alert('Error was: ' + status);
+    } else {
+      var originList = response.originAddresses;
+      var destinationList = response.destinationAddresses;
+      var outputDiv = document.getElementById('output');
+      outputDiv.innerHTML = '';
+      var outputParamDiv = document.getElementById('output_param');
+      outputParamDiv.innerHTML = '';
+      deleteMarkers(markersArray);
+
+      var showGeocodedAddressOnMap = function(asDestination) {
+        var icon = asDestination ? destinationIcon : originIcon;
+        return function(results, status) {
+          if (status === google.maps.GeocoderStatus.OK) {
+            map.fitBounds(bounds.extend(results[0].geometry.location));
+            markersArray.push(new google.maps.Marker({
+              map: map,
+              position: results[0].geometry.location,
+              icon: icon
+            }));
+          } else {
+            alert('Geocode was not successful due to: ' + status);
+          }
+        };
+      };
+   
+
+      for (var i = 0; i < originList.length; i++) {
+        var results = response.rows[i].elements;
+        geocoder.geocode({'address': originList[i]},
+            showGeocodedAddressOnMap(false));
+        for (var j = 0; j < results.length; j++) {
+          geocoder.geocode({'address': destinationList[j]},
+              showGeocodedAddressOnMap(true));
+        
+        
+        if(originList.length == 1){
+	         outputDiv.innerHTML += originList[i] +
+	              ': ' + results[j].distance.text + "  "+
+	              results[j].duration.text + '<br>';
+
+	         outputParamDiv.value = results[j].distance.text;
+        }      
+
+          
+        }
+      }
+    }
+  });
+}
+
+function deleteMarkers(markersArray) {
+  for (var i = 0; i < markersArray.length; i++) {
+    markersArray[i].setMap(null);
+  }
+  markersArray = [];
+}
+
+<% end %>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1flwA0YOfqf3qMafxtsK94ydZnhkiPgM&signed_in=true&callback=multipleOrigins"
+        async defer></script>
+  </body>
+</html>

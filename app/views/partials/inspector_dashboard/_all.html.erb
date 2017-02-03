@@ -1,0 +1,47 @@
+<div id="files" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+	  	<div class = "row">
+			<div class = "large-12 columns">
+				<h3 class="subheader">Arquivos Inspeção <%= @inspection.id %> - <%= @inspection.name %> </h3>
+			</div>
+		</div>
+		
+		<div class = "row">
+			<div class = "large-12 columns">
+				  <div class="content active" id="panel1">
+				  	<table id="inbox" class="display" cellspacing="0" width="100%">
+				        <thead>
+				            <tr>
+				                <th>Descrição</th>
+				                <th>Download</th>
+				                
+				            </tr>
+				        </thead>
+				        <tbody>
+				        	<% @files.each do |file| %>
+							    <tr >
+					                <td> <%= text_field_tag('n', file.description, disabled: true) %> </td>
+					                <td> <%= link_to 'Download', {:action => 'download', :ins_inspection_file_id => file.id}, :class => 'button tiny success' %></td>
+					            </tr>     
+						    <% end %>
+				        </tbody>
+				    </table>
+				  </div>
+			</div>
+		</div> 
+
+
+		<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+	</div>
+	
+	<div id="complement" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+		<div class = "row">
+			<div class = "large-12 columns">
+				<h3 class="subheader">Observações Externas -  Inspeção <%= @inspection.id %> - <%= @inspection.name %> </h3>
+			</div>
+		</div>
+		<% @external_notes.each do |note|  %>
+			<%= note.ins_record_type.try(:description) + " = " + note.external_notes %>
+		<% end %>		
+		<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+	</div>
+	

@@ -1,0 +1,52 @@
+<%= render "partials/top" %>
+	<div class = "row">
+		<div class = "large-12 columns">
+			<h3 class="subheader">Adicionar Arquivos Inspeção <%= @inspection.id %> - <%= @inspection.name %> </h3>
+		</div>
+	</div>
+	
+	<%= form_tag(action: "selected_files")%>
+	<div class = "row">
+		<div class = "large-12 columns">
+			<ul class="accordion" data-accordion>
+				<li class="accordion-navigation">
+				    <a href="#panel_root"><%= @root_folder %></a>
+						<% @path["root"].each do |file| # root folder first
+						%> 
+						    <div id="panel_root" class="content">
+						    	
+						      <%= hidden_field_tag "files[#{file.id}][]", '' # in case the field isnt checked
+						      %>	
+						      <%= check_box_tag "files[#{file.id}][]", checked = true,
+						      InsInspectionFile.find_by(ins_inspection_id: params[:ins_inspection_id],
+						      ins_report_file_id: file.id) # check if its checked
+						      %>
+						      <%= File.basename(file.report_path) %>
+						    </div>
+						<% end %>
+				</li>
+				<% @path.delete "root" # root content has already been shown
+				%>
+				
+				<% @path.each do |path| %>
+				 <li class="accordion-navigation">
+				 	<% panel_id = SpecialChars.new.remove(path.first.delete(' ').delete('.').delete('²'))%>
+				    <a href="#panel<%= panel_id %>"><%= path.first %></a>
+				    
+				    <% path.second.each do |file| %>
+				    	<div id="panel<%= panel_id %>" class="content">
+						      <%= hidden_field_tag "files[#{file.id}][]", '' %>		
+						      <%= check_box_tag "files[#{file.id}][]", checked = true,
+						      InsInspectionFile.find_by(ins_inspection_id: params[:ins_inspection_id],
+						      ins_report_file_id: file.id)
+						       %>  <%= File.basename(file.report_path) %>
+				    	</div>
+				    <% end %>
+				  </li>
+				<% end %>
+			</ul>	
+			<%= submit_tag("Editar")%>
+			<%= link_to "Voltar", {action: "index"}, class: "button success" %>
+		</div>
+	</div>
+<%= render 'partials/bottom'%>

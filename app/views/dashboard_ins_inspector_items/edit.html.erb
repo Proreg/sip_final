@@ -1,0 +1,58 @@
+<%= render "partials/top" %>
+<%= form_for @model_instance, :url =>{:action => 'update', :id =>@model_instance} do |f| %>
+	<div class="row">
+		<div class = "large-12 columns">
+			<h3 class="subheader">Painel Setor Operacional <%= @inspection.id %></h3>
+		</div>
+	</div>	
+	 <div class='row'>
+		<div class='columns large-12'>
+			<table>
+				<thead>
+					<tr>
+						<th>Produto</th>
+						<th>Quantidade</th>
+						<th>Valor Unitário</th>
+						<th>Valor Total</th>
+					</tr>
+				</thead>
+				<tbody class="input_fields_wrap">
+					<tr>
+						<td>
+							<center>
+								<%= f.select(:ins_inspector_product_id,  options_for_select(InsInspectorProduct.where.not(ins_spending_type_id: 1).map{|s|[s.description, s.id]}.insert(0, ""), @model_instance.ins_inspector_product_id), {} , { :class => "ui fluid search dropdown", :onchange => "populateKm(this, this.id)"})  %>
+										
+							</center>
+						</td>
+						<td>
+							<center>
+								<%= f.text_field :amount, id:"item_amount", onblur:"calcTotal(this.id);"  %>
+							</center>
+						</td>
+
+						<td>
+							<center>
+									<%= f.text_field :unitary_value, id:"item_unitary_value", value: Money.new(@model_instance.unitary_value).format,  class:"money_value", onblur:"calcTotal(this.id);"   %>
+							</center>
+						</td>
+						<td>
+							<center>
+								<%= f.text_field :total_value,  class:"money_value", value: Money.new(@model_instance.total_value).format, id:"item_total_value",  onblur:"calcTotal(this.id);"  %>
+							</center>
+						</td>	
+					</tr>
+    			</tbody>
+			</table>
+    	</div>	
+	</div>
+	<div class='row'>
+		<div class="columns large-12">
+			<%= link_to "Voltar", {:controller => 'inspector_dashboard', :action => 'index'}, :class => 'button info' %>
+			<%= f.submit("Salvar", :class => 'button success') %>
+		</div>
+	</div>
+	<input type="hidden" name="control" id="km_values" value="<%= GetInspectorKm.new(@inspector.id).format  %>">
+
+<%end%>
+
+<%= render 'partials/bottom'%>

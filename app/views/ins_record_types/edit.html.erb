@@ -1,0 +1,15 @@
+<%= render 'partials/forms/edit_show_new_record_type',
+view_name: "Seguradoras",
+
+#field_name, header_name, type
+
+
+table_fields: [ 
+	['description', 'Descrição', 'text'],
+	['ind_active', 'Ativo', 'yesno'],
+	['unit', 'Unidade', 'text'],
+	['ins_insurance_company', 'Seguradora', 'fk'],
+	['ins_spending_type', 'Tipo Despesa', 'fk'],
+['ins_inspector_product', 'Produto Inspetor', 'fk']], #table used by the index view
+mode:'update'
+%>

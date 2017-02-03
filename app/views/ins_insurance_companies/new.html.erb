@@ -1,0 +1,22 @@
+<%= render 'partials/forms/edit_show_new',
+view_name: "Seguradoras",
+
+#field_name, header_name, type
+
+
+table_fields: [ 
+    ['corporate_name', 'Razão Social', 'text'],
+	['commercial_name', 'Nome Fantasia', 'text'],
+	['cnpj', 'CNPJ', 'text'],
+	['state_registration', 'Inscrição Estdaual', 'text'],
+	['address', 'Endereço', 'text'],
+	['zip_code', 'CEP', 'text'],
+	['neighborhood', 'Bairro', 'text'],
+	['email', 'Email', 'text'],
+	['register_date', 'Data de Cadastro', 'todays_date'],
+	['notes', 'Observação', 'text'],
+	['status', 'Ativo', 'yesno'],
+	['sys_state', 'Estado - Filtro', 'fk'],
+	['sys_city', 'Cidade - Filtro', 'fk']], #table used by the index view
+mode:'create'
+%>

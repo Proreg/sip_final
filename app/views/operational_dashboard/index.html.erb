@@ -1,0 +1,120 @@
+<style>
+
+
+  td a{
+   display: block;
+	background-color:none;
+}
+tr{
+	   padding: 0;
+}
+</style>
+<%= render "partials/top" %>
+	<%= form_tag({action: "index"}, {:method => :get})%>
+	<div class='row'>	
+		<div class = "large-12 columns">
+			<h3 class="subheader">Painel Setor Operacional <%= @employee.name %></h3>
+		</div>
+	</div>
+	<br>	
+	<div class='row'>
+		<div class='columns large-5'>
+			<label>Inspetor: 
+				<% if InsInspector.where(hr_employee_id: @employee.id).empty? %>
+					<%= select_tag( :inspector, options_for_select(InsInspector.all.map{|s|[s.name, s.id]}.insert(0, ""), @inspector), { :class => "ui fluid search dropdown" }) %>
+				<% else %>
+					<%= select_tag( :inspector, options_for_select(InsInspector.where(hr_employee_id: @employee.id).map{|s|[s.name, s.id]}.insert(0, ""), @inspector), { :class => "ui fluid search dropdown" }) %>
+				<% end %>
+			</label>
+		</div>
+		<div class='columns large-5'>
+			<label> Motivo Apontamento:
+				<%= select_tag( :record_type, options_for_select(InsRecordType.all.map{|s|[s.description, s.id]}.insert(0, ""), @record_type), { :class => "ui fluid search dropdown" }) %></td>
+			</label>
+		</div>
+		<div class='columns large-2'>
+			<label> Situação:
+				<%= select_tag( :situation, options_for_select([[""],[ "a entregar", 0],
+					['entregue', 2],
+					["finalizada", 3],
+					[ "frustrada", 8],
+					[ "cancelada", 9]], @situation), { :class => "ui fluid search dropdown" }) %>
+			</label>
+		</div>
+	</div>	
+	<br>
+	<div class='row'>
+		<div class='columns large-2'>
+			<label> Data Inicial:
+				<%= text_field_tag( :request_start_date, @request_start_date, class: "date_form" ) %></td>
+			</label>
+		</div>
+		<div class='columns large-2'>
+			<label> Data Final:
+				<%= text_field_tag( :request_end_date, @request_end_date, class: "date_form") %></td>
+			</label>
+		</div>			
+		<div class='columns large-2 end'>
+			<label>
+				<%= submit_tag("Filtrar", :class => 'small button') %>
+			</label>
+		</div>
+	</div>
+		<div class = "large-12 columns">
+			<% if @inspections %>
+				<table id="operational" border="0" cellspacing="5" cellpadding="5">
+					<thead>
+						<tr>
+							<th>Inspetor</th>
+							<th>Nome</th>
+							<th>Cidade</th>
+							<th>Chave</th>
+							<th>Apontamento</th>
+							<th>Situação</th>
+							<th>Data de Pedido</th>
+							<th>Data de Agendamento</th>
+							<th>Ações</th>
+						</tr>
+					</thead>
+			        <tbody>
+						<% situations =  {0=>"A Entregar", 2=>"Entregue", 3=>"Finalizada", 8=>"Frustrada", 9=>"Cancelada"} %> 
+						<% @inspections.each do |inspection| %>
+							<% case inspection["record_type"].to_i 
+								 when 110 %> <!-- Laudo Enviado-->
+									<tr style="background-color: #e2de53">
+								<% when 3 %> <!-- Vistoria Executada -->
+									<tr style="background-color: #69b759">
+								<% when 20 %> <!-- Agendamento -->
+									<tr style="background-color: #aee5a2">
+								<% when 7 %> <!-- Problema Agendamento -->
+									<tr style="background-color: #c43131">
+								<% when 2 %> <!-- Em Execucao -->
+									<tr style="background-color: #9f94e8">
+								<% else%>
+									<tr>
+						 	<% end %>
+								<td><%= inspection["inspector_name"] %></td>
+								<td><%= inspection["inspection_name"] %></td>
+								<td><%= inspection["city"] %></td>
+								<td><%= inspection["key"] %></td>
+								<td><%= InsRecordType.find(inspection["record_type"]).description %></td>
+								<td><%= situations[inspection["situation"].to_i] %></td>
+								<td><%= inspection["request_date"].to_date %></td>
+								<td><%= inspection["scheduling_date"].to_date if inspection["scheduling_date"] %></td>
+								<td><center><%= link_to "Consultar", {:controller=> 'ins_inspections',:action => 'show', :id => inspection["inspection_id"]},   :class => 'tiny button success '%></center></td>
+							</tr>
+						<% end %>
+			    	</tbody>
+			    </table>
+			<% else %>
+				<label> Selecione a data </label>
+			<% end %>
+		</div>
+<%= render 'partials/bottom'%>
+
+ <script>
+$(document).ready(function() {
+    $('#operational').DataTable();
+} );
+
+</script>

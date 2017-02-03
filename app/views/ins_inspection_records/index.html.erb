@@ -1,0 +1,18 @@
+
+  
+<%= render 'partials/forms/index',
+view_name: "Apontamentos - " + InsInspection.find(params[:ins_inspection_id]).name,
+#field_name, header_name 
+table_fields: [ 
+[:ins_record_type, 'Tipo Apontamento', 'fk'],	
+[:sys_user, 'Inspetor/funcionario', 'fk'],	
+['rec_datetime', 'Horário Inspeção', 'string'],
+['ind_include', 'Incluir', 'truefalse'],
+['internal_notes', 'Obervações Internas', 'text'],
+['external_notes', 'Obsevações Externas', 'text']]
+%>
+<script>
+  $( function() {
+    $( "#datepicker" ).datepicker(); //datepicker for the wicegrid
+  } );
+</script>

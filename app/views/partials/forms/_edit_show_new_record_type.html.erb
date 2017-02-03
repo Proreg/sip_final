@@ -1,0 +1,118 @@
+
+<%= render "partials/top" %>
+	<div class = "row">
+		<div class = "large-12 columns">
+			<h3 class="subheader"><%= view_name -%></h3>
+		</div>
+	</div>
+<%= form_for @model_instance, :html => {:multipart => true}, :url =>{:action => mode, :id =>@model_instance} do |f| %>
+     <div class = "row">
+		<div class = "large-2 columns">
+			<label> Código
+				<%= f.text_field 'id', :disabled => true %>
+			</label>
+		</div>		
+		<div class = "large-10 columns">
+			<label> Descrição do apontamento:
+				<% case mode when 'show' %>
+					<%= f.text_field 'description', :disabled => true %>
+				<% else %>
+					<%= f.text_field 'description', :required => true %>						
+				<% end %>
+			</label>
+		</div>
+	</div>
+	<div class='row'>		
+		<div class = "large-4 columns">
+			<label>  <b>Enviar e-mail (Marcar para enviar o e-mail): </b>
+				<% case mode when 'show' %>
+					<%= f.check_box :ind_send, {disabled: true}, 't', 'f' %>					
+				<% else %>
+					<%= f.check_box :ind_send, {}, 't', 'f' %>			
+				<% end %>
+			</label>
+		</div>
+		<div class = "large-3 columns">
+			<label> Enviar e-mail funcionario: 
+				<% case mode when 'show' %>
+					<%= f.check_box :employee, {disabled: true}, 't', 'f' %>					
+				<% else %>
+					<%= f.check_box :employee, {}, 't', 'f' %>			
+				<% end %>
+			</label>	
+		</div>
+		<div class = "large-3 columns end">
+			<label> Enviar e-mail inspetor: 
+				<% case mode when 'show' %>
+					<%= f.check_box :inspector, {disabled: true}, 't', 'f' %>					
+				<% else %>
+					<%= f.check_box :inspector, {}, 't', 'f' %>			
+				<% end %>
+			</label>	
+		</div>		
+	</div>	
+	<div class = "row">
+			<div class = "large-12 columns">
+				<label> Enviar e-mail para os grupos:
+					<% case mode when 'show' %>
+							<% groups = ""
+							 if @model_instance.sys_group_id
+							   @model_instance.sys_group_id.split(";").each do |group| groups = groups + SysGroup.find(group).description + " - " end 
+							 end 
+							 %>
+							 <%= text_field_tag "groups", groups, disabled: true  %> 	
+						<% when 'update' %>
+							  <%= f.select( :sys_group_id, options_for_select(SysGroup.all.map{|s|[s.description, s.id]}, @model_instance.sys_group_id&.split(";")), {}, { :class => "ui fluid search dropdown multiple", multiple: true }) %><!-- Because you only want to specify html_options, just pass in an empty Hash {} for options. @model_instance.sys_city_id selects the ID for edit-->	
+						<%else%>
+ 						  	<%= f.select( :sys_group_id, options_for_select(SysGroup.all.map{|s|[s.description, s.id]}), {}, { :class => "ui fluid search dropdown", multiple: "Grupos" }) %><!-- Because you only want to specify html_options, just pass in an empty Hash {} for options.-->
+					<% end %>
+				</label>
+			</div>
+	</div>		
+	<br>
+	<div class='row'>		
+			<div class = "large-12 columns">
+				<label> Enviar para e-mail alternativo: <b>(separados por ";")</b>   
+					<% case mode when 'show' %>
+							<%= f.text_field 'alternative', :disabled => true %>
+						<% else %>
+							<%= f.text_field 'alternative' %>
+					<% end %>
+				</label>
+			</div>	
+	</div>
+	<div class='row'>		
+			<div class = "large-12 columns">
+				<label> Assunto do e-mail:
+					<% case mode when 'show' %>
+							<%= f.text_field 'subject', :disabled => true %>
+						<% else %>
+							<%= f.text_field 'subject', :required => true %>						
+					<% end %>
+				</label>
+			</div>
+	</div>
+	<div class='row'>		
+			<div class = "large-12 columns">
+				<label> Caminho do corpo do e-mail:
+					<% case mode when 'show' %>
+							<%= f.text_field 'email_body_path', :disabled => true %>
+						<% else %>
+							<%= f.text_field 'email_body_path', :required => true %>						
+					<% end %>
+				</label>
+			</div>
+		</div>
+	<div class = 'row'>
+		<div class = "small button-group radius">
+			<% if mode == 'show' then %>
+				<a><%= link_to "Editar", {:action => 'edit'}, :class => 'button success' %></a>
+				<a><%= link_to "Voltar", {:action => 'index'}, :class => 'secondary button' %></a>
+			<% else %>
+				<a><%= f.submit 'Salvar', :class => 'button success' %></a>
+				<a><%= link_to 'Cancelar', {:action => 'index'}, :class => 'button alert' %></a>
+			<% end %>
+		</div>
+	</div>	
+<% end %>
+<%= render 'partials/bottom'%>

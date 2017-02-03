@@ -1,0 +1,30 @@
+.log-in-form {
+  border: 1px solid #cacaca;
+  padding: 1rem;
+  border-radius: 3px; }
+
+.logo{
+    margin-bottom: 5%;
+}
+.obs{
+    height: 130px;
+}
+
+body,html{
+    height:100%;
+    width:100%;
+}
+
+.main-section{
+	height:100vh;
+}
+
+.off-canvas-list li {
+	list-style-type: none;
+}
+.row{
+	margin-left:2%;
+	margin-right:2%;
+	max-width:96%;
+	width:100%
+}

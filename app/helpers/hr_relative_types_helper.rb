@@ -1,0 +1,2 @@
+module HrRelativeTypesHelper
+end

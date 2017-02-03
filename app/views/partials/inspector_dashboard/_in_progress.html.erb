@@ -1,0 +1,49 @@
+	
+	
+	<div id="inspection_frustated" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+	  	<div class = "row">
+			<div class = "large-12 columns">
+				<h3 class="subheader">Frustar - Inspeção <%= @inspection.id %> - <%= @inspection.name %> </h3>
+			</div>
+		</div>
+		
+		<div class = "row">
+			<div class = "large-12 columns">
+				  <div class="content active" id="panel1">
+				  	<%= form_tag({action: :inspection_frustated}, multipart: true) do %>
+					  <%= file_field_tag 'files_frustrated[]', multiple: true %>
+					  <div id="selectedFilesFrustrated"></div>
+						
+						
+						<label> Motivo
+							<%= text_field_tag 'reason', "", required: true %>							
+						</label>
+							
+					  	<%= submit_tag("Enviar")%>
+
+					<% end %>
+				  </div>
+			</div>
+		</div> 
+
+
+		<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+	</div>
+	
+	<div id="run_problem" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+		<div class = "row">
+			<div class = "large-12 columns">
+				<h3 class="subheader"> Problema Execução </h3>
+			</div>
+		</div>
+		<%= form_tag( action: "run_problem")%>
+			<div class = "large-12 columns">
+				<label> Motivo
+					<%= text_field_tag 'reason', "", required: true %>							
+				</label>
+			</div>	
+			
+		<%= submit_tag("Enviar", class: "button success") %>	
+		<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+	</div>
+				

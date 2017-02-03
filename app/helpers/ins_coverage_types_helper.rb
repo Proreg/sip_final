@@ -1,0 +1,2 @@
+module InsCoverageTypesHelper
+end

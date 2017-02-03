@@ -1,0 +1,8 @@
+<%if params[:controller]== 'hr_relatives' %>
+  <%= link_to "Telefones", {:controller=>'hr_relative_phones', :action => 'index',  :relative_id=> @model_instance.id}, :class => ' info button' %> 
+<%end %>
+<%if params[:controller]== 'ins_insurance_companies'%>
+  <%= link_to "Inspetores", { :action => 'inspectors_edit',  :ins_insurance_company_id=> @model_instance.id}, :class => ' info button' -%>
+  <%= link_to "Telefones", { :controller=> 'ins_company_phones', :action => 'index',  :ins_insurance_company_id=> @model_instance.id}, :class => ' info button'-%> 
+<%end%>
+

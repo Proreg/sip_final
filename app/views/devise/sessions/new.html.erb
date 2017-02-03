@@ -1,0 +1,46 @@
+<html>
+	<head>
+        <meta charset="UTF-8">
+        <title>SAP - Sistema de Apoio da Proreg</title>
+		<%= stylesheet_link_tag  'application', media: 'all', 'data-turbolinks-track' => true %>
+		<%= csrf_meta_tags %>
+
+    </head>
+    <body >
+    	<div class="row" style="margin-top:10vh">
+        	<div class="medium-6 medium-centered large-4 large-centered columns">
+           		<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+					<div class="row column log-in-form">
+				   		<img class="logo"alt="Proreg" src="/images/logo.png">
+				   		<% if flash[:alert] %>
+    			  			<div data-alert class=" alert-box alert notice">
+    			  				<center>
+    			  					<%= flash[:alert] %>
+    			  				</center>
+    			  			</div>
+    			  			<br>
+  						<% end %>
+				  		<div class="field">
+				 			<p>
+				 				<%= f.label :login %>
+				 				<br />
+				    			<%= f.text_field :login %>
+				    		</p>
+				  		</div>
+				  		<div class="field">
+				    		<%= f.label :password %><br />
+				    		<%= f.password_field :password, autocomplete: "off" %>
+				  		</div>
+				  		<div class="actions">
+				    		<%= f.submit "Acessar", {:class=>'button expanded'}%>
+				  		</div>
+				  		<%= render "devise/shared/links" %>				  		
+				  	</div>
+				<% end %>
+            </div>
+        </div>
+    </body>
+</html>
+
+
+

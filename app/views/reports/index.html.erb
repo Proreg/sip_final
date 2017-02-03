@@ -1,0 +1,46 @@
+<%= render "partials/top" %>
+	<div class = "row">
+		<div class = "large-12 columns">
+			<h3 class="subheader">Relatórios </h3>
+		</div>
+	</div>
+	
+	<div class = "row">
+		<div class = "large-12 columns">
+		  	<table id="inbox" class="display" cellspacing="0" width="100%">
+		        <thead>
+		            <tr>
+		                <th>Relação</th>
+		                <th>Parâmetro </th>
+		                <th>Parâmetro </th>
+		                <th>Download</th>
+		            </tr>
+		        </thead>
+		        <tbody>
+		        	<tr >
+		       			<%= form_tag(action: "inspections_by_insurance_companies", format: "pdf") do %>
+		        	    	<td> Inspeções por Cia de Seguro</td>
+			                <td> Data Início <%= text_field_tag "start_date", '', required: true %> </td>
+			                <td> Data Final: <%= text_field_tag "end_date", '', required: true, class: 'date_form'%> </td>
+			                <td> <%= submit_tag("download")%></td>
+			        	<% end %>    
+					</tr>       	
+		        </tbody>
+		    </table>
+		</div>
+	</div>
+	
+<%= render 'partials/bottom'%>
+<script>
+	$(document).ready(function() {
+    $('#inbox').DataTable();
+    $('#execute').DataTable();
+    $('#to_send').DataTable();
+} );
+
+jQuery(document).ready(function($) {
+    $(".clickable-row").click(function() {
+        window.document.location = $(this).data("href");
+    });
+});
+</script>

@@ -1,0 +1,2 @@
+module InsInsuranceCompaniesHelper
+end

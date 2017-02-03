@@ -1,0 +1,26 @@
+<%= render 'partials/top'%><!-- Renders the top of the pages-->
+	<div class = "row">
+		<div class = "large-12 columns">
+			<h3 class = 'subheader'>Consulta de <%= view_name -%></h3>
+		</div>
+<%= form_for @model_instance, :url =>{:action => "show", :id=>@model_instance} do |f| %>
+	<div class = "row">
+		<div class = "large-6 columns">
+			<label> Nome:
+				<%= f.text_field 'description', :disabled => true %>
+			</label>
+		</div>
+	</div>
+	<div class = "row">
+		<div class='columns large-12'>
+			<div class = "button-group radius ">
+				<a><%= link_to "Editar", {:action => 'edit' }, :class => 'button success small' %></a>
+				<a><%= link_to 'Voltar', {:action => 'index' }, :class => 'secondary button small' %> </a>
+				<%if params[:controller]== 'sys_groups' %>
+		  			<a> <%= link_to "Permissões", {:controller=>'sys_permissions', :action => 'edit',  :group_id=> params[:id]}, :class => ' info button small'  %></a>
+				<%end%>
+			</div>
+		</div>
+	</div>		
+<% end %>
+<%= render 'partials/bottom'%><!-- Renders the top of the pages-->

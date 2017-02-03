@@ -1,0 +1,59 @@
+<!--Lists model that contain only one field: description.-->
+
+<%= render 'partials/top' %> <!-- Renders the top of the pages-->
+<div class = "row">
+	<div class = "large-12 columns">
+		<h3 class = "subheader">Lista de <%= view_name -%></h3><!--Title of the model goes into the view-->
+	</div>
+
+		<div style="text-align: right;" >
+		<%= button_to "Adicionar", {:action => 'new'}, :method => :get, :class => "button small" %>
+	</div>
+
+	<div class="table-scroll">
+
+	<%if @grid.blank?%>
+		Nenhum registro
+	<%else%>
+		
+	<%= grid((@grid)) do |g|
+	
+	g.column name: 'ID', attribute: 'id' do |task|
+	  task.id
+	end
+
+	g.column  name: 'Descrição', attribute: 'description' do |task|
+	  task.description
+	end
+
+	content_tag :ul, class: ["button-group", "radius"] do
+	  g.column do  |task|
+	    # content_tag :li do
+	      link_to "Consultar", {:controller=>params[:controller],:action => 'show', :id => task.id},   :class => 'tiny button secondary '
+	    #end
+	  end
+
+	  g.column name: 'Ação' do  |task|
+	    #content_tag :li do
+	      link_to "Editar", {:controller=>params[:controller],:action => 'edit', :id => task.id }, :class => 'tiny button success '
+	    #end
+      end
+
+	  g.column do  |task|
+	    #content_tag :li do
+	     # button_to "Excluir", task, :controller=>params[:controller], :method => :delete, :confirm => "Are you sure?", :class => 'tiny button alert'
+	    #end
+	  end
+	end
+  end
+    
+ %>
+ 
+ <% end %>
+ <%= flash[:notice] %>
+</div>
+
+
+</div>
+
+<%= render 'partials/bottom'%><!-- Renders the top of the pages-->

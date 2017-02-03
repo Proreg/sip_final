@@ -1,0 +1,37 @@
+<% if @employee.blank? %>
+<p>Setor não existe</p>
+<% else %>
+<p>digite o novo valor</p>
+
+<%= form_for @employee, :url =>{:action => "update", :id =>@employee} do |f| %>
+--<h1> <%= @employee.name %> </h1> -- <br\>
+
+
+	<p>Nome<br/>
+	<%= f.text_field 'name' %></p>
+	<p>Ramal<br/>
+	<%= f.text_field 'extension_line' %></p>
+	<p>CPF<br/>
+	<%= f.text_field 'cpf', :class=> %></p>
+	<p>RG<br/>
+	<%= f.text_field 'rg' %></p>
+	<p>Data de nascimento<br/>
+	<%= f.date_select :date_of_birth, :order => [:day, :month, :year], start_year: (Time.now.year - 65), end_year: (Time.now.year - 13) %>
+	<p>Data de Contratação<br/>
+	<%= f.date_select :hiring_date, :order => [:day, :month, :year], start_year: (Time.now.year - 30), end_year: (Time.now.year) %>
+	<p>Ativo<br/>
+	<%= check_box_tag(:active) %>
+	
+	<p>Setor<br/>
+	<%= f.select(:sector_id) do %>
+	  <% @sectors.each do |c| -%>
+	    <%= content_tag(:option, c.description, value: c.id) %>
+	  <% end %>
+	<% end %>
+	<br/>
+<%= f.submit "Save changes" %>
+<% end %>
+
+<%= link_to 'Back', {:action => 'list' } %>
+<% end %>
+

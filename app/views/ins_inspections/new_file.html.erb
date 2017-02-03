@@ -1,0 +1,161 @@
+
+<%= render "partials/top" %>
+	<div class = "row">
+		<div class = "large-12 columns">
+			<h3 class="subheader">Inspeção</h3>
+		</div>
+	</div>
+<%= form_for @model_instance, :url =>{:multipart => true,:action => 'create', :id =>@model_instance} do |f| %>
+		<div class = "row">
+			
+			<div class = "large-1 columns">
+				<label> Código
+					<%= f.text_field 'id', :disabled => true %>
+				</label>
+			</div>		
+			<div class = "large-3 columns">
+				<label> Seguradora
+					<%= f.select( :ins_insurance_company_id, options_for_select(InsInsuranceCompany.all.map{|s|[s.commercial_name, s.id]}, params[:ins_inspection]["ins_insurance_company_id"]), {}, { :class => "ui fluid search dropdown", :id => 'company'} ) %><!-- Because you only want to specify html_options, just pass in an empty Hash {} for options.-->
+				</label>
+			</div>		
+			<div class = "large-8 columns">
+				<label> Arquivo Importado
+					  <%= f.text_field 'import_file', :value => params[:import_file], :readonly => true%><!-- Because you only want to specify html_options, just pass in an empty Hash {} for options.-->
+				</label>
+			</div>		
+			<div class = "large-5 columns">
+				<label> Nome
+					<%= f.text_field 'name', :required => true, :value=> @fields["Nome"]%>
+				</label>
+			</div>
+			<div class = "large-2 columns">
+				<label> Data Pedido
+					<%= f.text_field 'request_date', :required => true, :class=>'date_form', :value=> @fields["Data do Pedido"]%>
+				</label>
+			</div>			
+			<div class = "large-3 columns">
+				<label> Valor
+					<%= f.text_field 'inspection_value', :required => true, :value=> Money.new(@fields["Valor"]).format, :class => "money_value"%>
+ 				</label>
+			</div>
+		</div>	
+		<div class = "row">
+			<div class = "large-2 columns">
+				<label> CEP
+					<%= f.text_field 'zip_code', :class=> "zip_code", :value=> @fields["CEP"], :id=>'zip_code', :onblur => "pesquisacep();" %>
+				</label>
+			</div>
+			<div class = "large-4 columns">
+				<label> Endereço
+					<%= f.text_field 'address', :required => true, :id => "address",  :value=> @fields["Endereco"]%>
+				</label>
+			</div>
+			<div class = "large-2 columns">
+				<label> Bairro
+					<%= f.text_field 'neighborhood', :required => true, :id => "neighborhood", :value=> @fields["Bairro"]%>
+				</label>
+			</div>
+				<div class = "large-1 columns">
+					<label> Estado
+							  <%= select_tag( :sys_state_id, options_for_select(SysState.all.map{|s|[s.uf, s.id]}.insert(0, "")), { :class => "ui fluid search dropdown", :onchange => "populateCities(this, 'cities')" }) %>
+					</label>
+				</div>
+				<div class = "large-3 columns">
+				<label> Cidade
+						  <%= f.select( :sys_city_id, {}, {}, { :class => "ui fluid search dropdown", :id => 'cities' }) %><!-- Because you only want to specify html_options, just pass in an empty Hash {} for options.-->
+				</label>
+			</div>
+		</div>
+		<div class = "row">
+			<div class = "large-2 columns">
+				<label> Chave
+					<%= f.text_field 'key', :value=> @fields["Chave"]%>
+				</label>
+			</div>
+			<div class = "large-2 columns">
+				<label> Solicitante
+					<%= f.text_field 'claimant', :value=> @fields["Solicitante"]%>
+				</label>
+			</div>
+			<div class = "large-2 columns">
+				<label> Atividade
+					<%= f.text_field 'activity', :value=> @fields["Atividade"]%>
+				</label>
+			</div>
+			<div class = "large-3 columns">
+				<label> Item Produto
+					<%= select_tag :ins_product, options_for_select(InsProduct.where(ins_insurance_company_id: params[:ins_inspection]["ins_insurance_company_id"]).map{|s|[s.description, s.id]}), { :class => "ui fluid search dropdown"} %>
+				</label>
+			</div>	
+			<div class = "large-12 columns">
+				<label> Observações
+					<%= f.text_field 'notes' %>
+				</label>
+			</div>	
+		</div>
+		
+	<div class='row'>
+    	<div class='columns large-6'>    		
+    		<table>
+    			<thead>
+    				<tr>
+    					<th><center>Cobertura</center></th>
+    					<th><center>Observação</center></th>
+    					<th><center>Remover</center></th>    					
+    				</tr>
+    			</thead>
+    			<tbody class="input_fields_wrap">   
+    				<tr>
+    					<td>
+    						<button class="add_field_button tiny">Adicionar Cobertura</button>
+    					</td>
+    				</tr>
+    				<tr>
+    					<td><center><select name="coverages[][ins_coverage_type]" id="coverages__ins_coverage_type"><%= options_for_select(InsCoverageType.all.map{|s|[s.description, s.id]}) %></select></center></td>
+    					<td><center><input type="text" name="coverages[][notes]" id="coverages__notes" /></center></td><td><center></center></td>
+    				</tr> 
+    			</tbody>
+    			
+			</table>
+			
+    	</div>	
+    	<div class='columns large-6'>    		
+    		<table>
+    			<thead>
+    				<tr>
+    					<th><center>Tipo</center></th>
+    					<th><center>Telefone</center></th>
+    					<th><center>Remover</center></th>    					
+    				</tr>
+    			</thead>
+    			<tbody class="input_fields_wrap_phone">   
+    				<tr>
+    					<td>
+    						<button class="add_field_button_phone tiny">Adicionar Telefone</button>
+    					</td>
+    				</tr>
+    				<tr>
+    					<td><center><select name="phones[][sys_telephone_type]" id="telephone_ins_telephone_type"><%= options_for_select(SysTelephoneType.all.map{|s|[s.description, s.id]}, 72) %></select></center></td>
+    					<td><center><input type="text" name="phones[][phone_number]" id="phone_number" class="complete_phone_number" required /></center></td><td><center></center></td>
+    				</tr> 
+       			</tbody>
+    			
+			</table>
+			
+    	</div>	
+	    	
+	</div>	
+	
+	 
+	 		
+	<div class = 'row'>
+		<ul class = "button-group radius">
+			<li><%= f.submit 'Salvar', :class => 'button success' %></li>
+			<li><%= link_to 'Cancelar', {:action => 'index'}, :class => 'button alert' %></li>
+		</ul>
+	</div>	
+	
+<% end %>
+
+
+<%= render 'partials/bottom'%>

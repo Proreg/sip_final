@@ -1,0 +1,92 @@
+<!--Lists model that contain only one field: description.-->
+
+<%= render 'partials/top' %> <!-- Renders the top of the pages-->
+<div class = "row">
+	<div class = "large-12 columns">
+		<h3 class = "subheader">Lista de <%= view_name -%></h3><!--Title of the model goes into the view-->
+	</div>
+	
+	<% if params[:controller] != "ins_inspection_records"%>
+	 	<div style="text-align: right;" >
+			<%= button_to "Adicionar", {:action => 'new'}, :method => :get, :class => "button" %>
+		</div>
+	<% end %>
+
+
+	<div class="table-scroll">
+		<%if @grid.blank?%>
+		  Nenhum registro
+		<%else%>
+		  <%= grid(@grid) do |g|
+
+   		  table_fields.each do |field, header, type|
+   		  	if type == 'fk'
+   		      if field == :ins_insurance_company
+ 			    g.column name: header, attribute: 'commercial_name', assoc: field
+ 			  elsif field == :ins_inspector 
+ 			    g.column name: header, attribute: 'name', assoc: field
+ 			  elsif field == :sys_user
+ 			  	g.column name: header do |user|
+		    	  user = SysUser.find(user.sys_user_id)
+				  if user.type_person == "e"
+			    	HrEmployee.find(user.hr_employee_id).name
+			      else
+			   	    InsInspector.find(user.ins_inspector_id).name
+  				  end
+  	     	    end 	
+		     	
+		     	@hide_show = true
+ 			  else
+ 			    g.column name: header, attribute: 'description', assoc: field
+ 			  end		
+ 			elsif type == 'bool'
+ 			  g.column name: header do |relative|
+			    relative.dependente? ? 'Sim' : 'Não'
+		      end 	
+ 			elsif type == 'file'
+ 			  content_tag :ul, class: ["button-group", "radius"] do
+		   	    g.column do  |task|
+			      link_to "Download", {:action => 'download', :id => task.id},   :class => 'tiny button secondary '
+				end
+			  end
+			 
+			 content_tag :ul, class: ["button-group", "radius"] do
+		   	    g.column do  |task|
+			      link_to "Deletar", {:action => 'destroy', :id => task.id},   {:method => :delete,  :class => 'tiny button secondary ' }
+				end
+			 end
+			  
+			  @hide_show = @hide_edit = true # Don't show the default 'consultar'  e 'editar' buttons
+			else
+		  	  g.column name: header, attribute: field
+		  	end
+		  end	
+		  
+		  
+		  if !@hide_show # Don't show the default 'consultar'  e 'editar' buttons
+			content_tag :ul, class: ["button-group", "radius"] do
+			g.column do  |task|
+			# content_tag :li do
+			link_to "Consultar", {:action => 'show', :id => task.id},   :class => 'tiny button secondary '
+			#end
+			end
+		   end
+		  end
+		 
+	     if !@hide_edit # Don't show the default 'consultar'  e 'editar' buttons
+		 	g.column name: 'Ação' do  |task|
+			#content_tag :li do
+			link_to "Editar", {:action => 'edit', :id => task.id }, :class => 'tiny button success '
+			#end
+			end
+	 	 end
+		end
+
+		%>
+
+		<%end #end if%>
+	</div>
+
+</div>
+
+<%= render 'partials/bottom'%><!-- Renders the top of the pages-->

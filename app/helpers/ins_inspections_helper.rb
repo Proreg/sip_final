@@ -1,0 +1,2 @@
+module InsInspectionsHelper
+end

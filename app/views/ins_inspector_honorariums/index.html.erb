@@ -1,0 +1,8 @@
+<%= render 'partials/forms/index',
+view_name: "Honorários - " + InsInspector.find(params[:inspector_id]).name,
+
+#field_name, header_name 
+table_fields: [ 
+[:ins_inspector_product, 'Produto', 'fk'],
+['honorarium_value', 'Valor Honorário', 'money']]
+%>

@@ -1,0 +1,33 @@
+<%= render "partials/top" %>
+	<div class = "row">
+		<div class = "large-12 columns">
+			<h3 class="subheader">Nova Inspeção</h3>
+		</div>
+	</div>
+<%= form_for @model_instance, :url =>{:multipart => true, :action => 'new_file', :id =>@model_instance} do |f| %>
+		<div class = "row">
+			<div class = "large-5 columns">
+				<label> Seguradora
+				    <%= f.select( :ins_insurance_company_id, options_for_select(["Selecionar"]+InsInsuranceCompany.all.map{|s|[s.commercial_name, s.id]}), {}, { :class => "ui fluid search dropdown", :id => 'company'}) %><!-- Because you only want to specify html_options, just pass in an empty Hash {} for options.-->
+				</label>
+			</div>		
+			<div class = "large-7 columns" id="file_handler" style="display: none;">
+				<label> Importar arquivo
+					  <%= file_field_tag :import_file, :id=> 'import_file', :onchange => "this.form.submit();"%><!-- Because you only want to specify html_options, just pass in an empty Hash {} for options.-->
+				</label>
+			</div>		
+		</div>
+		
+<% end %>
+
+<%= render 'partials/bottom'%>
+
+<%= javascript_tag do%> <!-- show the file button only if there's an insurance company checked --> 
+
+$(function() {
+    $('#company').change(function(){
+        $('#file_handler')[ ($("option[value='Selecionar']").is(":checked"))? "hide" : "show" ]();  
+    });
+});
+
+<% end %>

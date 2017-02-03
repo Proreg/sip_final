@@ -1,0 +1,16 @@
+<h1><%= @employee.name %></h1>
+
+<p>
+   <strong>ID :</strong> <%= @employee.id %><br />
+   <strong>Nome:</strong> <%= @employee.name %><br />
+   <strong>CPF:</strong> <%= @employee.cpf %><br />
+   <strong>rg:</strong> <%= @employee.rg %><br />
+   <strong>Data de nascimento:</strong> <%= @employee.date_of_birth %><br />
+   <strong>CriADO EM:</strong> <%= @employee.created_at %><br />
+   <strong>ATUALIZADO EM:</strong> <%= @employee.updated_at %><br />
+</p>
+
+
+<hr />
+
+<%= link_to 'voltar', {:action => 'list'} %>

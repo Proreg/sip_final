@@ -1,0 +1,42 @@
+
+	
+	<div class = "row">
+		<center>
+			<h1 class="subheader">Inspeção por Cia </h3>
+		</center>
+	</div>
+	
+	<div class = "row">
+		<table class='hover'>
+			<thead>
+			    <tr>
+			      <th width="400"> Cia</th>
+			      <th width="60"><center>Quantidade Inspeções</center> </th>
+			      <th><center>Valor Total</center> </th>
+			    </tr>
+			</thead>
+		 </table> 
+
+	<table class='hover'> 
+	  <tbody>
+	  	<% @companies.each do |company| %>
+	  	<tr>
+	  		<td><%= InsInsuranceCompany.find(company["ins_insurance_company_id"]).commercial_name %></td>
+	  		<td><center><%= company["count(insp.ins_insurance_company_id)"] %></center></td>
+	  		<td><center>R$ <%= company["total"] %></center></td>
+	  	</tr>
+	  	<% end %>
+	  </tbody>	
+	
+	</table>	  
+		
+  		<table class='hover'>
+	  		<tfoot>
+			    <tr>
+			      <th width="415"> Total </th>
+			      <th><center> <%= @totals.first["count(insp.ins_insurance_company_id)"] %></center> </th>
+			      <th><center>R$ <%= @totals.first["total"] %></center> </th>
+			    </tr>
+			  </tfoot>
+		</table>	
+	</div>	

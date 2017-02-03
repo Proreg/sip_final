@@ -1,0 +1,10 @@
+<%= render 'partials/forms/edit_show_new',
+view_name: "Editar Descrição Arquivo - " + InsInspectorFile.find(params[:id]).inspector_file.to_s,
+
+#field_name, header_name 
+
+
+table_fields: [ ['description', 'Descrição', 'text'], ['sys_document_type', 'Tipo Documento', 'fk']
+], #table used by the index view
+mode:'update'
+%>

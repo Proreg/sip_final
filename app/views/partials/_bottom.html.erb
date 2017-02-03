@@ -1,0 +1,78 @@
+		</div> <!-- Close offcanvas-wrap (opened in _top partial)-->
+	</div><!-- Close inner-wrap (opened in _top partial)-->
+
+		<!-- content goes here -->
+  </body>
+    <script>
+    // Essas funções devem ficar no HTML, por possuir funções de append
+    
+        $(document).ready(function() {
+             $(document).foundation();
+        })
+        $(".off-canvas-submenu").hide();
+        $(".off-canvas-submenu-call").click(function() {
+	var icon = $(this).parent().next(".off-canvas-submenu").is(':visible') ? '+' : '-';
+	$(this).parent().next(".off-canvas-submenu").slideToggle('fast');
+	$(this).find("span").text(icon);
+	});
+	
+	
+	<%if params[:controller] == "ins_inspections" %>
+		    $(document).ready(function() {
+		
+		
+			//Control coverages
+		    var max_fields      = 30; //maximum input boxes allowed
+		    var wrapper         = $(".input_fields_wrap"); //Fields wrapper
+		    var add_button      = $(".add_field_button"); //Add button ID
+		    
+		    var x = 1; //initlal text box count
+		    $(add_button).click(function(e){ //on add input button click
+		        e.preventDefault();
+		        if(x < max_fields){ //max input box allowed
+		            x++; //text box increment
+		            //What will be shown when user click button
+		            $(wrapper).append("<%= raw escape_javascript(render(:partial => '/partials/js_append/new_inspection_coverages')) %>")
+		    				 
+		        }
+		    });
+		    
+		    $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
+		    	//consider the parents of the remove button
+		        e.preventDefault(); $(this).parent('center').parent('td').parent('tr').remove(); x--;
+		    })
+		    
+		    
+		    //Control phones
+		    var max_fields_phone      = 10; //maximum input boxes allowed
+		    var wrapper_phone         = $(".input_fields_wrap_phone"); //Fields wrapper
+		    var add_button_phone      = $(".add_field_button_phone"); //Add button ID
+		    
+		    var y = 1; //initlal text box count
+		    $(add_button_phone).click(function(e){ //on add input button click
+		        e.preventDefault();
+		        if(y < max_fields_phone){ //max input box allowed
+		            y++; //text box increment
+		            //What will be shown when user click button
+		            $(wrapper_phone).append("<%= raw escape_javascript(render(:partial => '/partials/js_append/new_inspection_phones')) %>")
+		    				 
+		        }
+		    });
+		    
+		    $(wrapper_phone).on("click",".remove_field_phone", function(e){ //user click on remove text
+		    	//consider the parents of the remove button
+		        e.preventDefault(); $(this).parent('center').parent('td').parent('tr').remove(); y--;
+		    })
+		});
+		
+		window.onbeforeunload = function (e) {
+			 $.ajax("/inspecoes/not_temp/<%= params[:import_file] %>")		
+		};
+	<% end %>
+	
+	
+
+    </script>
+
+	
+</html>

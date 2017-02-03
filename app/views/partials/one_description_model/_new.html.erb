@@ -1,0 +1,24 @@
+<%= render "partials/top"  %> <!-- Renders the top of the pages-->
+	<div class="row">
+		<div class="large-12 columns">
+			<h3 class="subheader">Cadastro de <%= view_name -%></h3>  
+		</div>
+	</div>
+<%= form_for @model_instance, :url =>{:action => "create", :id =>@model_instance} do |f| %>
+	<div class="row">
+		<div class="large-6 columns ">
+			<label>Nome:
+				<%= f.text_field 'description', :required => true %>
+			</label>
+		</div>
+	</div>
+	<div class="row">
+		<div class='columns large-12'>          
+			<div class="button-group radius">
+				<a><%= f.submit "Salvar", :class => 'button success small' %></a>
+				<a><%= f.submit "Salvar +", :class => 'button success small', :more => 'true'%></a>
+				<a><%= link_to 'Cancelar', {:action => 'index' }, :class => 'button alert small'  %></a>
+			</div>     
+		</div> 
+<% end %>                             	
+<%= render 'partials/bottom'%><!-- Renders the top of the pages-->

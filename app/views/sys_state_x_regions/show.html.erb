@@ -1,0 +1,10 @@
+<%= render 'partials/forms/edit_show_new',
+view_name: "Região x Parente" ,
+
+
+#field_name, header_name, DB strucutre(If it's a foreign key , regular field, boolean...)
+#For Foreign Key, send a symbol instead of the string 
+table_fields: [['sys_state', 'Estado', 'fk'],
+['sys_region', 'Região', 'fk']], #table used by the index view
+mode:'show'
+%>

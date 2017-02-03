@@ -1,0 +1,2 @@
+module HrBloodTypesHelper
+end

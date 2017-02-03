@@ -1,0 +1,6 @@
+<%= render 'partials/forms/index',
+view_name: "Documentos - "+ InsSubInspector.find(params[:sub_inspector_id]).name,
+
+#field_name, header_name 
+table_fields: [['description', 'Arquivo'], ['','','file']] #table used by the index view
+%>

@@ -1,0 +1,30 @@
+<h2>Senha alterada</h2>
+<p>
+		
+	<% if @user.hr_employee_id %>
+	   <%= @user.hr_employee.name%></br>
+	<% else%>
+		Inspetor: <%= @user.ins_inspector.name%></br>
+	<%end%>
+
+</p>
+<p>
+	Link para acesso:
+	<% if @user.hr_employee_id %>
+		<a href='http://10.0.0.140:3000'> 10.0.0.140:3000</a>
+	<% else%>
+		<a href='http://proreg.ddns.com.br:8086/sys_users/sign_in'>http://proreg.ddns.com.br:8086/sys_users/sign_in</a>
+	<%end%>
+</p>
+
+<p>
+	Usuário: <%= @user.username%>
+</p>
+
+<p>
+	Senha: <%= @pw %>
+</p>
+<p>
+	<b>Este é um e-mail automático e não deve ser respondido</b>
+</p>
+

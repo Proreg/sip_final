@@ -1,0 +1,9 @@
+require 'rails_helper'
+
+RSpec.describe Setor, type: :model do
+  describe "creates a new setor" do
+    it "verifies the presence of a string before saving to DB" do
+      expect(Setor.new).to_not be_valid
+    end
+  end
+end

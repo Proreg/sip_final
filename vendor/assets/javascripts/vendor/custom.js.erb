@@ -1,0 +1,154 @@
+//CUSTOM JS 
+jQuery(function($){
+	
+   $(".money_value").maskMoney({symbol:'R$', 
+	showSymbol:true, thousands:'.', decimal:',', symbolStay: true});
+   $(".date_form").mask("99/99/9999");
+   $(".zip_code").mask("99.999-999");
+   $(".date_of_birth").mask("99/99/9999");
+   $(".area_code").mask("(99)");
+
+   $(".phone_number").focusout(function(){
+	    var phone, element;
+	    element = $(this);
+	    element.unmask();
+	    phone = element.val().replace(/\D/g, '');
+	    if(phone.length > 8) {
+	        element.mask("99999-999?9");
+	    } else {
+	        element.mask("9999-9999?9");
+	    }
+	}).trigger('focusout');
+	   
+   $(".complete_phone_number").focusout(function(){
+	    var phone, element;
+	    element = $(this);
+	    element.unmask();
+	    phone = element.val().replace(/\D/g, '');
+	    if(phone.length > 10) {
+	        element.mask("(99)99999-999?9");
+	    } else {
+	        element.mask("(99)9999-9999?9");
+	    }
+	}).trigger('focusout');
+	
+   $(".cpf").mask("999.999.999-99");
+   $(".time").mask("99:99");
+   $(".datetime").mask("99/99/9999 99:99");
+});
+
+
+var populateCities = function (country, target_id, cities) {
+    // delcare our function variables
+    var i = 0, options, cities, selection, target;
+
+    // our available cities per country, stored as JSON
+    cities = <%= raw GetCityOptions.new.format %> 
+
+    // save the selected option that is passed to the function
+    selection = country.options[country.selectedIndex].value;
+
+    // get our target select box by the id that is passed into the function
+    target = document.getElementById(target_id);
+
+    // reset our current target options
+    target.options.length = 0;
+
+    // make sure the selection isn't none
+    if(selection !== 'none') {
+        // get our available options
+        options = cities[selection];
+
+        // assign the city and value for each option available
+        for(var city in options) {
+            target.options[i] = new Option(city, options[city]);
+            i++;
+        }
+    }
+};
+
+var populateHonoraria = function (product_id, target_id) {
+	
+    // delcare our function variables
+    var i = 0, options, product_honoraria_hash, selection, target;
+
+    // our available cities per country, stored as JSON
+   
+    product_honoraria_hash =  document.getElementById("products_values").value;
+    product_honoraria_hash = JSON.parse(product_honoraria_hash);
+
+    // save the selected option that is passed to the function
+    selection = product_id.options[product_id.selectedIndex].value;
+
+    // get our target select box by the id that is passed into the function
+    target = document.getElementById(target_id);
+
+	var id_html = target_id.replace(/[^0-9]/g,'');
+	var name_html = target_id.replace(/[0-9]/g,'');
+	
+	document.getElementById("item_unitary_value" + id_html).value = product_honoraria_hash[selection];
+		
+    maskInput("item_unitary_value" + id_html);
+    maskInput("item_total_value" + id_html);
+    calcTotal(target_id);
+};
+
+var populateKm = function (product_id, target_id) {
+    // delcare our function variables
+    var i = 0, options, product_honoraria_hash, selection, target;
+
+    // our available cities per country, stored as JSON
+   
+    km_value = document.getElementById("km_values").value;
+    km_value = JSON.parse(km_value);
+	
+    // save the selected option that is passed to the function
+    selection = product_id.options[product_id.selectedIndex].value;
+
+	if(km_value[selection] != undefined){
+		// get our target select box by the id that is passed into the function
+	    target = document.getElementById(target_id);
+	
+		var id_html = target_id.replace(/[^0-9]/g,'');
+		var name_html = target_id.replace(/[0-9]/g,'');
+		
+		document.getElementById("item_unitary_value" + id_html).value = km_value[selection];
+			
+	    maskInput("item_unitary_value" + id_html);
+	    maskInput("item_total_value" + id_html);
+	    calcTotal(target_id);
+	};
+	    
+};
+
+
+function controlIdNumbers(){
+	
+	control = document.getElementById("control_value").value;
+	
+	document.getElementById("item_amount").id = document.getElementById("item_amount").id + control;
+	document.getElementById("item_unitary_value").id = document.getElementById("item_unitary_value").id + control;
+	document.getElementById("item_total_value").id = document.getElementById("item_total_value").id + control;
+	document.getElementById("item_ins_product").id = document.getElementById("item_ins_product").id + control;
+	
+};
+
+function calcTotal(id_name){
+	
+	id_number = id_name.replace(/[^0-9]/g,'');
+	id_name = id_name.replace(/[0-9]/g,'');
+	document.getElementById("item_total_value"+id_number).value =  (document.getElementById("item_amount"+id_number).value * document.getElementById("item_unitary_value"+id_number).value.replace(/\D/g, ''));
+	maskInput(id_name + id_number);
+	console.log(id_name + id_number);
+	
+    maskInput("item_total_value" + id_number);
+};
+
+jQuery(document).ready(function($) {
+
+	//make it global access
+	window.maskInput = function(inputId) {
+		console.log(inputId);
+		$("#" + inputId).maskMoney('mask');
+	}
+});

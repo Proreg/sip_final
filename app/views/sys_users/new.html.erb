@@ -1,0 +1,17 @@
+<%= render "partials/top" %>
+	<div class = "row">
+		<div class = "large-12 columns">
+			<h3 class="subheader">Usuário não existe!</h3>
+			<ul class = "button-group radius">			
+				<% if params[:employee_id] %>
+					<li><%= link_to "Criar Usuário", {:action => 'create', :employee_id => params[:employee_id]}, :class => 'button info', :method => :post %></li>
+			 		<li><%= link_to "Voltar", {:controller=> 'hr_employees',:action => 'show', :id => params[:employee_id]}, :class => 'secondary button' %></li>	
+				<% else %>
+					<li><%= link_to "Criar Usuário", {:action => 'create', :inspector_id => params[:inspector_id]}, :class => 'button info', :method => :post %></li>
+					<li><%= link_to "Voltar", {:controller=> 'ins_inspectors',:action => 'show' , :id => params[:inspector_id]}, :class => 'secondary button' %></li>
+				<% end %> 
+			</ul>
+		</div>
+	</div>
+	
+<%= render 'partials/bottom'%>

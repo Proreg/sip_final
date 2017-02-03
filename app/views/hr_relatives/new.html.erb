@@ -1,0 +1,13 @@
+<%= render 'partials/forms/edit_show_new',
+view_name: "Novo Parente do Funcionário "+ @employee.name, 
+
+#field_name, header_name 
+table_fields: [['name', 'Nome', 'text'],
+['date_of_birth', 'Data de Nascimento', 'text'], 
+['gender', 'Sexo', 'gender'],
+['cpf', 'CPF', 'text'],
+['rg', 'RG', 'text'],
+['hr_relative_type', 'Tipo Parente', 'fk'],
+['dependente', 'Depentente', 'yesno']], #table used by the index view
+mode:'create'
+%>

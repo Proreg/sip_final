@@ -1,0 +1,110 @@
+<%= render "partials/top"  %> <!-- Renders the top of the pages-->
+<%= form_tag(action:'change') do %>
+	<div class="row">
+		<div class="large-12 columns">
+            <h3 class="subheader">Itens Inspeção </h3>  
+        </div>
+	</div>
+    <br/>
+    <div class='row'>
+    	<div class='columns large-12'>    		
+    		<table>
+    			<thead>
+    				<tr>
+    					<th>Classificação</th>
+    					<th>Produto</th>
+    					<th>Franquia</th>
+    					<th>Quantidade</th>
+    					<th>Valor Unitário</th>
+    					<th>Valor Total</th>
+    					<th>Deletar</th>
+    				</tr>
+    			</thead>		
+    			<tbody class="input_fields_wrap">  
+						<% @items.each do |item| -%>
+    						<tr>
+    						<%= fields_for 'items[]' , item do |item_fields| -%>
+									<td>
+	      								<center>
+	      									<%= item_fields.select( :ins_classification, options_for_select(InsClassification.where(ins_insurance_company_id: InsInspection.find(params[:ins_inspection_id]).ins_insurance_company_id).map{|s|[s.description, s.id]}, item.ins_classification_id), { :class => "ui fluid search dropdown"}) %>
+										</center>
+	      							</td>	
+      								<td>
+	      								<center>
+	      									<% honoraria = GetCompanyHonoraria.new(@inspection.ins_insurance_company.id, @inspection.inspection_value).format_rails %>
+	      									<%= item_fields.select( :ins_product, options_for_select(honoraria.map{|s|[s.ins_product.description, s.ins_product_id]}.insert(0, "") , item.ins_product_id), {}, { :class => "ui fluid search dropdown", :onchange => "populateHonoraria(this, this.id)"} ) %>
+										</center>
+	      							</td>
+	      							
+        							<td>
+        								<center>
+        									<%= item_fields.text_field :deductible %>
+        								</center>
+									</td>	
+        							<td>
+        								<center>
+        									<%= item_fields.text_field :amount, :id=> "item_amount"+ item.id.to_s, :onchange => "calcTotal(this.id);" %>
+        								</center>
+									</td>	
+        							<td>
+        								<center>
+    										<%= item_fields.text_field :unitary_value, :value=> Money.new(item.unitary_value).format, :class => "money_value", :id=> "item_unitary_value"+ item.id.to_s, :onchange => "calcTotal(this.id);"  %>
+        								</center>
+									</td>	
+        							<td>
+        								<center>
+        									<%= item_fields.text_field :total_value, :id=> "item_total_value"+ item.id.to_s, :class => "money_value", :value=> Money.new(item.total_value).format %>
+        								</center>
+									</td>	
+	   
+									<td>
+        								<center>
+        									<%= link_to "Excluir", {:controller=>params[:controller],:action => 'delete', :method => :delete, :id=> item.id}, :confirm => "Are you sure?", :class => 'tiny button alert'%>
+        								</center>
+									</td>
+      							
+    					<% end %>
+    					</tr>	
+    				<% end %>
+    			</tbody>
+			</table>
+    	</div>	
+	</div>
+	<div class='row'>
+		<div class="columns large-12">
+			<%= link_to "Voltar", {:controller => 'ins_inspections', :action => 'show', :id => params[:ins_inspection_id]}, :class => 'button info' %>
+			<button class="add_field_button tiny">Adicionar Cobertura</button>
+			<%= submit_tag("Editar", :class => 'button success') %>
+			<% end %>
+		</div>
+	</div>
+
+	<input type="hidden" name="control" id="control_value" value="1">
+	<input type="hidden" name="control" id="products_values" value="<%= GetCompanyHonoraria.new(@inspection.ins_insurance_company.id, @inspection.inspection_value).format_js  %>">
+	
+<%= render 'partials/bottom'%><!-- Renders the top of the pages-->
+<%= javascript_tag do %>
+$(document).ready(function() {
+    var max_fields      = 10; //maximum input boxes allowed
+    var wrapper         = $(".input_fields_wrap"); //Fields wrapper
+    var add_button      = $(".add_field_button"); //Add button ID
+    var control_value = document.getElementById("control_value");
+    
+    var x = 0; //initlal text box count
+    $(add_button).click(function(e){ //on add input button click
+        e.preventDefault();
+        if(x < max_fields){ //max input box allowed
+            x++; //text box increment
+            //What will be shown when user click button
+            control_value.value = x;
+
+            $(wrapper).append("<%= raw escape_javascript(render(:partial => '/partials/js_append/inspection_items')) %>")   				 
+        }
+    });
+    
+    $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
+    	//consider the parents of the remove button
+        e.preventDefault(); $(this).parent('center').parent('td').parent('tr').remove(); x--;
+    })
+});
+<% end %>

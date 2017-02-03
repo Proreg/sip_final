@@ -1,0 +1,51 @@
+<%= render "partials/top"  %> <!-- Renders the top of the pages-->
+
+	<div class="row">
+        <div class="large-12 columns">
+            <h4 class="subheader">Edição de Grupos do Usuário: <%= SysUser.find(params[:id]).username %></h4>  
+        </div>
+    </div>
+    <br/>
+    <div class = 'row'>
+    	<div class = 'large-12 columns'>
+    		<table>
+    			<thead>
+    				<tr>
+    					<th>Nome</th>
+    					<th>Ação</th>
+    				</tr>
+    			</thead>
+    			<tbody>
+    				<%= form_tag(action:'update_groups', method: :put)do %>
+    				<tr>
+    					<% @groups.each do |group| -%>
+    					<td>
+    						<%= fields_for 'group[]' , group do |group_fields| -%>    
+      						<%= group.description %>
+    					</td>
+    					<td>
+    						<center>
+      							<% if SysUserXGroup.find_by(sys_user_id: params[:id], sys_group_id: group.id)%> 
+      								<%= group_fields.check_box :description, {checked: true }, 'true', 'false' %> 
+      							<%else%>
+       								<%= group_fields.check_box :description, {}, 'true', 'false' %>
+      							<%end%>
+      						</center>
+     					</td>
+     					<% end -%>
+					</tr>
+    				<% end %>
+  				</tbody>
+    		</table>
+    	</div>  
+  	</div> 
+  	<div class = 'row'>
+  		<div class = 'large-12 columns'>
+  			<ul class = "button-group radius">
+  				<li><%= submit_tag("Editar", class: 'button success') %></li>
+				<li><%= link_to "Voltar", {:action => 'index'}, :class => 'secondary button' %></li>
+  			</ul>	
+  		</div>
+  	</div>
+<% end -%>	
+<%= render 'partials/bottom'%><!-- Renders the top of the pages-->

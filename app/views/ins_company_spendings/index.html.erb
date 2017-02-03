@@ -1,0 +1,9 @@
+<%= render 'partials/forms/index',
+view_name: "Despesas Cia",
+
+#field_name, header_name 
+table_fields: [['description', 'Descrição', 'text'],
+ [:ins_product, 'Produto','fk'], 
+ [:ins_insurance_company, 'Cia', 'fk'],
+ [:sys_state, 'Estado', 'fk'],] #table used by the index view
+%>

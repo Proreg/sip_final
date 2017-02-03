@@ -1,0 +1,70 @@
+<%= render "partials/top"  %> <!-- Renders the top of the pages-->
+
+	<div class="row">
+		<div class="large-12 columns">
+            <h3 class="subheader">Edição de Grupo: <%= SysGroup.find(params[:group_id]).description %></h3>  
+        </div>
+	</div>
+    <br/>
+    <div class='row'>
+    	<div class='columns large-12'>    		
+    		<table>
+    			<thead>
+    				<tr>
+    					<th>Nome</th>
+    					<th>Visualizar</th>
+    					<th>Editar</th>
+    					<th>Deletar</th>
+    					<th>Incluir</th>
+    				</tr>
+    			</thead>
+    			<tbody>    	
+    				<%= form_tag(action:'change', method: :put)do %>
+    					<% @permissions.each do |permission| -%>
+							<tr>
+    							<%= fields_for 'permission[]' , permission do |permission_fields| -%>
+      								<td>
+      									<% if SysMenu.find(permission.sys_menu_id).controller == " " %>
+      									    [TÍTULO]
+      									<% end %>
+      									<%= SysMenu.find(permission.sys_menu_id).description %>
+	  								</td>	
+        							<td>
+        								<center>
+        									<%= permission_fields.check_box :show_it, {}, 't', 'f' %>
+        								</center>
+									</td>
+									<td>
+										<center>
+        									<%= permission_fields.check_box :edit_it, {}, 't', 'f' %>
+        								</center>
+        							</td>
+        							<td>
+        								<center>
+        									<%= permission_fields.check_box :destroy_it, {}, 't', 'f'%>
+        								</center>
+									</td>
+									<td>
+										<center>
+        									<%= permission_fields.check_box :create_it, {}, 't' ,'f' %>
+        								</center>
+        							</td>   
+      							<% end -%>
+    						<% end %>
+    					</tr>
+    			</tbody>
+			</table>
+    	</div>	
+	</div>
+	<div class='row'>
+		<div class="columns large-12">
+			<%= submit_tag("Editar", :class => 'button success') %>
+			<% end -%>
+		</div>
+	</div>
+
+
+            
+                
+	
+<%= render 'partials/bottom'%><!-- Renders the top of the pages-->

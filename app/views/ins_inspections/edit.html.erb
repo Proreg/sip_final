@@ -1,0 +1,247 @@
+
+<%= render "partials/top" %>
+	<div class = "row">
+		<div class = "large-12 columns">
+			<h3 class="subheader">Inspeção</h3>
+		</div>
+	</div>
+<%= form_for @model_instance, :url =>{:action => 'update', :id =>@model_instance} do |f| %>
+		<div class = "row">
+			<div class = "large-1 columns">
+				<label> Código
+					<%= f.text_field 'id', :disabled => true %>
+				</label>
+			</div>		
+			<div class = "large-3 columns">
+				<label> Seguradora
+					<%= f.select( :ins_insurance_company_id, options_for_select(InsInsuranceCompany.all.map{|s|[s.commercial_name, s.id]}, @model_instance.ins_insurance_company_id), {}, { :class => "ui fluid search dropdown"} ) %><!-- Because you only want to specify html_options, just pass in an empty Hash {} for options.-->
+				</label>
+			</div>		
+			<div class = "large-5 columns">
+				<label> Nome
+					<%= f.text_field 'name', :required => true%>
+				</label>
+			</div>
+			<div class = "large-2 columns">
+				<label> Data Pedido
+					<%= f.text_field 'request_date', :required => true , :class=> 'date_form'%>
+				</label>
+			</div>	
+			<div class = "large-1 columns">
+				<label> Situação
+					<%= f.text_field 'situation', :required => true%>
+				</label>
+			</div>
+			<div class = "large-3 columns">
+				<label> Valor
+					<%= f.text_field 'inspection_value', :value => Money.new(@model_instance.inspection_value).format, :required => true, :class => "money_value"%>
+				</label>
+			</div>
+		</div>	
+		<div class = "row">
+			<div class = "large-4 columns">
+				<label> Endereço
+					<%= f.text_field 'address', :required => true %>
+				</label>
+			</div>
+			<div class = "large-2 columns">
+				<label> Bairro
+					<%= f.text_field 'neighborhood', :required => true%>
+				</label>
+			</div>
+			<div class = "large-2 columns">
+				<label> CEP
+					<%= f.text_field 'zip_code', :class=> "zip_code"%>
+				</label>
+			</div>
+			<div class = "large-1 columns">
+				<label> Estado
+					<%= select_tag( :sys_state_id, options_for_select(SysState.all.map{|s|[s.uf, s.id]}, @model_instance.sys_city.sys_state_id).insert(0, ""), { :class => "ui fluid search dropdown", :onchange => "populateCities(this, 'cities')" }) %>
+				</label>
+			</div>
+			<div class = "large-3 columns">
+				<label> Cidade
+					<%= f.select( :sys_city_id, options_for_select(SysCity.where(sys_state_id: @model_instance.sys_city.sys_state_id).map{|s|[s.description, s.id]}, @model_instance.sys_city_id), {}, { :class => "ui fluid search dropdown" , :id => 'cities'}) %><!-- Because you only want to specify html_options, just pass in an empty Hash {} for options. @model_instance.sys_city_id selects the ID for edit-->	
+				</label>
+			</div>
+			<div class = "large-4 columns">
+				<label> Local do Risco
+					  <%= f.select( :risk_local_id, options_for_select(SysCity.all.map{|s|[s.description+ " - " + s.sys_state.uf, s.id]}.insert(0, ""), @model_instance.risk_local_id), {}, { :class => "ui fluid search dropdown" }) %>
+				</label>
+			</div>
+		</div>
+		<div class = "row">
+			<div class = "large-2 columns">
+				<label> Chave
+					<%= f.text_field 'key' %>
+				</label>
+			</div>	
+			<div class = "large-2 columns">
+				<label> Solicitante
+					<%= f.text_field 'claimant' %>
+				</label>
+			</div>
+			<div class = "large-2 columns">
+				<label> Atividade
+					<%= f.text_field 'activity' %>
+				</label>
+			</div>
+			<div class = "large-3 columns">
+				<label> Inspetor
+						  <%= f.select( :ins_inspector_id, options_for_select(InsInspector.all.map{|s|[s.name, s.id]}.insert(0, " "), @model_instance.ins_inspector_id), {}, { :class => "ui fluid search dropdown" }) %><!-- Because you only want to specify html_options, just pass in an empty Hash {} for options.-->
+				</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class = "large-12 columns">
+				<label> Observações
+					<%= f.text_field 'notes' %>
+				</label>
+			</div>
+		</div>
+		
+	<div class='row'>
+    	<div class='columns large-6'>    		
+    		<table>
+    			<thead>
+    				<tr>
+    					<th><center>Cobertura</center></th>
+    					<th><center>Observação</center></th>    					
+    				</tr>
+    			</thead>
+    			<tbody class="input_fields_wrap">   
+    				
+    				<tr>
+    					<td>
+    						<button class="add_field_button tiny">Adicionar Cobertura</button>
+    					</td>
+    				</tr>
+    				
+    				<% @coverages.each do |coverage| %>
+   						<tr>
+    						<%= fields_for 'coverages[]', coverage do |coverage_fields| %>
+   								<td>
+      								<center>
+      									<%= coverage_fields.select( :ins_coverage_type, options_for_select(InsCoverageType.all.map{|s|[s.description, s.id]}, coverage.ins_coverage_type_id), { :class => "ui fluid search dropdown"} ) %><!-- Because you only want to specify html_options, just pass in an empty Hash {} for options.-->
+									</center>
+      							</td>	
+       							<td>
+       								<center>
+       									<%= coverage_fields.text_field :ins_notes %>
+       								</center>
+								</td>
+								<td>
+									<center>
+       									<%= link_to "Excluir", {:action => 'delete_coverage',  :coverage_id=> coverage.id, :ins_inspection_id=> params[:id]}, :confirm => "Are you sure?", :class => 'tiny button alert'%>
+       								</center>
+								</td>
+   							<% end -%>
+   							
+      					</tr>
+      			
+    				<% end %>
+    			</tbody>
+    			
+			</table>
+			
+    	</div>	
+	    
+	    <div class='columns large-6'>    		
+    		<table>
+    			<thead>
+    				<tr>
+    					<th><center>Tipo</center></th>
+    					<th><center>Telefone</center></th>    					
+    				</tr>
+    			</thead>
+    			<tbody class="input_fields_wrap_phone">   
+    				
+    				<tr>
+    					<td>
+    						<button class="add_field_button_phone tiny">Adicionar Telefone</button>
+    					</td>
+    				</tr>
+    				
+    				<% @phones.each do |phone| %>
+   						<tr>
+    						<%= fields_for 'phones[]', phone do |phone_fields| %>
+   								<td>
+      								<center>
+      									<%= phone_fields.select( :sys_telephone_type, options_for_select(SysTelephoneType.all.map{|s|[s.description, s.id]}, phone.sys_telephone_type_id), { :class => "ui fluid search dropdown"} ) %><!-- Because you only want to specify html_options, just pass in an empty Hash {} for options.-->
+									</center>
+      							</td>	
+       							<td>
+       								<center>
+       									<%= phone_fields.text_field :phone_number, :class=> 'complete_phone_number', :required=> true %>
+       								</center>
+								</td>
+								<td>
+									<center>
+       									<%= link_to "Excluir", {:action => 'delete_phone',  :phone_id=> phone.id, :ins_inspection_id=> params[:id]}, :confirm => "Are you sure?", :class => 'tiny button alert'%>
+       								</center>
+								</td>
+   							<% end -%>
+   							
+      					</tr>
+      			
+    				<% end %>
+    				
+    				
+    				
+    				
+    			</tbody>
+    			
+			</table>
+			
+    	</div>	
+	    	
+	</div>	
+		
+	<div class = 'row'>
+		<ul class = "button-group radius">
+			<li><%= f.submit 'Salvar', :class => 'button success' %></li>
+			<li><%= link_to 'Cancelar', {:action => 'index'}, :class => 'button alert' %></li>
+		</ul>
+	</div>	
+<% end %>
+
+<%= render 'partials/bottom'%>
+
+<%= javascript_tag do %>
+$(document).ready(function() {
+    var max_fields      = 10; //maximum input boxes allowed
+    var wrapper         = $(".input_fields_wrap"); //Fields wrapper
+    var add_button      = $(".add_field_button"); //Add button ID
+    
+    var x = 1; //initlal text box count
+    $(add_button).click(function(e){ //on add input button click
+        e.preventDefault();
+        if(x < max_fields){ //max input box allowed
+            x++; //text box increment
+            //What will be shown when user click button
+    	   $(wrapper).append("<%= raw escape_javascript(render(:partial => '/partials/js_append/edit_inspection_coverages')) %>")
+    	 }
+    })   
+    
+    // Phone
+	var max_fields_phone      = 10; //maximum input boxes allowed
+    var wrapper_phone         = $(".input_fields_wrap_phone"); //Fields wrapper
+    var add_button_phone      = $(".add_field_button_phone"); //Add button ID
+    
+    var y = 1; //initlal text box count
+    $(add_button_phone).click(function(e){ //on add input button click
+        e.preventDefault();
+        if(y < max_fields_phone){ //max input box allowed
+            y++; //text box increment
+            //What will be shown when user click button
+    	   $(wrapper_phone).append("<%= raw escape_javascript(render(:partial => '/partials/js_append/edit_inspection_phones')) %>")
+    	 }
+    })   
+     
+    $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
+    	//consider the parents of the remove button
+        e.preventDefault(); $(this).parent('center').parent('td').parent('tr').remove(); x--;
+    })
+});
+
+<% end %>

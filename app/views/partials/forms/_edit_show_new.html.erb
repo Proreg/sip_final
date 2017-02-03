@@ -1,0 +1,113 @@
+<%= render "partials/top" %>
+<div class = "row">
+	<div class = "large-12 columns">
+		<h3 class="subheader"><%= view_name -%></h3>
+	</div>
+</div>
+<div class = "row">
+	<% size_table = table_fields.size #stores the number of parameters to set the class for the last one
+	%>
+	<%= form_for @model_instance, :url =>{:action => mode, :id =>@model_instance} do |f|table_fields.each do |field, header, type|%>
+		<% size_table = size_table - 1%>
+	  		<div class = "large-4 columns <%if size_table ==0 # add class 'end' to the block
+	   		%>
+	   		end
+	  		<% end %>
+	  		"> <!--close div openning tag -->
+	<label> <%= header%>
+		<%=
+			case mode when 'show' # select the type of view
+				if type=='yesno' # select the type of data
+					if @model_instance.send(field) == true # send() converts a string to and object name
+						text_field_tag header, 'Sim', :disabled=>true  # text_field_tag(name, value = nil, options = {})-->
+					else
+						text_field_tag header, 'Não', :disabled=>true  # text_field_tag(name, value = nil, options = {})-->
+					end
+				elsif type=='fk' # select the type foreign key
+			    	if field == 'ins_insurance_company'
+						text_field_tag header, # text_field_tag(name, value = nil, options = {}), send() converts a string to and object name-->
+						@model_instance.send(field).try(:commercial_name), # returns the description for the current field 
+						:disabled=>true # disable since it's the show method 
+			 		else
+			 			text_field_tag header, # text_field_tag(name, value = nil, options = {}), send() converts a string to and object name-->
+						@model_instance.send(field).try(:description), # returns the description for the current field 
+						:disabled=>true # disable since it's the show method 
+			 		end
+			  	elsif type == "money"
+		 			f.text_field field, :value => Money.new(@model_instance.send(field)).format,  :disabled => true
+			  	else
+			    	f.text_field field, :id=> field, :disabled => true #simple text and date format
+			  	end
+			else
+				if type=='gender' #Dropdown for gender field--> 
+			    	f.select( :gender, options_for_select([['M', 'M'], ['F', 'F']], @model_instance.gender)) # Because you only want to specify html_options, just pass in an empty Hash {} for options.--> 
+			  	elsif type=='yesno' # Dropdown for boolean field
+			    	f.select( field.to_sym, options_for_select([['Sim', 't'], ['Não', 'f']], @model_instance.send(field))) # Because you only want to specify html_options, just pass in an empty Hash {} for options.--> 
+			  	elsif type=='fk' # Dropdown for relative_type field-->
+			    	if field == 'ins_insurance_company'
+				  		f.select( (field+'_id').to_sym, # converts the string to a symbol
+				  		options_for_select(field.to_s.camelize.constantize.all.map{|s|[s.commercial_name, s.id]}, #convert to Camel Case then to a Class
+		  		  		@model_instance.send(field+'_id')), # parameter to select the value in the edit view
+		  		  		{},
+		  		  		{ :class => "ui fluid search dropdown" }) # Because you only want to specify html_options, just pass in an empty Hash {} for options. (field.to_s.camelize.constantize  turns a string to a class name--> 
+					elsif field == 'sys_state' && header == "Estado - Filtro"
+						select_tag( :sys_state_id, options_for_select(SysState.all.map{|s|[s.uf, s.id]}, @model_instance.try(:sys_city).try(:sys_state_id)).insert(0, ""), { :class => "ui fluid search dropdown", :onchange => "populateCities(this, 'cities')" })
+					elsif field == 'sys_city' && header == "Cidade - Filtro"
+						f.select( :sys_city_id, options_for_select(SysCity.where(id: @model_instance.sys_city_id).map{|s|[s.description, s.id]}, @model_instance.sys_city_id), {}, { :class => "ui fluid search dropdown" , :id => 'cities'})
+					else
+   			      		f.select( (field+'_id').to_sym, # converts the string to a symbol
+				  		options_for_select(field.to_s.camelize.constantize.all.map{|s|[s.description, s.id]}.insert(0, ""), #convert to Camel Case then to a Class
+		  		  		@model_instance.send(field+'_id')), # parameter to select the value in the edit view
+		  		  		{},
+		  		  		{ :class => "ui fluid search dropdown" }) # Because you only want to specify html_options, just pass in an empty Hash {} for options. (field.to_s.camelize.constantize  turns a string to a class name--> 
+					end
+			  	elsif type == 'controller_list'
+			  		# get a list of controllersActiveRecord::Base.connection.tables {|t| t.classify.constantize rescue nil}.compact
+			  		routes= Rails.application.routes.routes.map do |route|
+				  	route.defaults[:controller]
+				end
+				routes = routes.uniq
+			  	f.select( :controller,
+			  	options_for_select(routes, @model_instance.controller),
+			  	{}, 
+			  	{ :class => "ui fluid search dropdown" }) # Because you only want to specify html_options, just pass in an empty Hash {} for options.-->		
+			elsif type == 'todays_date'  
+			  f.text_field field, :id => field, :required => true , :value=> Date.today   #simple text and date format
+			elsif type == "money"
+		 	  f.text_field field, :required => true, :class => "money_value"
+			else
+				if field == 'action' # SysMenu
+					if mode == "update" 
+			        	f.text_field field, :id=> field
+					else
+			        	f.text_field field, :id=> field, :value => 'index' 
+				end
+			elsif field == 'order_menu' # SysMenu
+			  f.text_field field, :id=> field 
+			elsif field == 'cpf'
+			  f.text_field field, :class=> field, :required => true, :id => "cpf", :onblur => "validarCPF();"
+			else
+				f.text_field field, :class=> field, :required => true   
+			end
+		end
+		end %>
+	</label>
+</div>
+	<%end%>
+</div>
+<div class = 'row'>
+	<div class = "button-group radius">
+		<% if mode == 'show' then %>
+			<a><%= link_to "Editar", {:action => 'edit'}, :class => 'button success small' %></a>
+			<a><%= link_to "Voltar", {:action => 'index'}, :class => 'secondary button small' %></a>
+			<%= render 'partials/forms/extra_show_buttons'%>
+	
+		<% else %>
+			<a><%= f.submit 'Salvar', :class => 'button success small' %></a>
+			<a><%= f.submit "Salvar +", :class => 'button success small', :more => 'true'%></a>
+			<a><%= link_to 'Cancelar', {:action => 'index'}, :class => 'button alert small' %></a>
+		<% end %>
+	</div>
+</div>	
+<% end %>
+<%= render "partials/bottom" %>
